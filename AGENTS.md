@@ -42,7 +42,7 @@ tests/test_aggregate.py               standard-library unittest
 
 ### Rules
 
-- **Never edit `skills/council/`.** To update it, copy `skills/council/SKILL.md` and `LICENSE` from a newer tstack commit, update the commit hash here, in `README.md`, in `LICENSE`, in the CI workflow and in `CHANGELOG.md`. Then check that `hill-climb` Step 2 still matches what council does.
+- **Never edit `skills/council/`.** To update it, copy `skills/council/SKILL.md` and `LICENSE` from a newer tstack commit, update the commit hash here, in `README.md`, in the CI workflow and in `CHANGELOG.md`. Then check that `hill-climb` Step 2 still matches what council does.
 - **Follow the Agent Skills spec.** `name` matches the folder name (lowercase, hyphens, at most 64 characters). `description` is at most 1024 characters and says what the skill does and when to use it, with trigger phrases. File references are relative to the skill root and go one level deep (`references/x.md`, `scripts/x.py`).
 - **Keep it generic.** No personal names, clients, private paths or house rules inside the skill. Personal settings belong in the user's `CLAUDE.md` or `AGENTS.md`, and the skill says so.
 - **Credit Theo.** Keep the video link and the tstack credit in `SKILL.md` and `README.md`. A new idea from Theo gets credited the same way.

@@ -19,9 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-skills/council/ is a verbatim copy of the council skill from
-https://github.com/t3dotgg/tstack (commit 1085050), Copyright (c) 2026 Theo Browne,
-also under the MIT License. Its full license text is in skills/council/LICENSE.
