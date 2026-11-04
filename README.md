@@ -56,7 +56,7 @@ Climbing uses a lot of tokens, so set a maximum number of rounds.
 ## Credits
 
 - Method: [Theo Browne](https://github.com/t3dotgg), from [Agents Sucked At UI (Until Today)](https://youtu.be/xq0eB8vxeqk).
-- `council` skill: [t3dotgg/tstack](https://github.com/t3dotgg/tstack) at commit `1085050`, MIT license, in [`skills/council/LICENSE`](skills/council/LICENSE).
+- `council` skill: from [t3dotgg/tstack](https://github.com/t3dotgg/tstack), MIT license, in [`skills/council/LICENSE`](skills/council/LICENSE).
 
 Not affiliated with Theo Browne or T3.
 
