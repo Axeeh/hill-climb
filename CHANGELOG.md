@@ -11,6 +11,9 @@ All notable changes to this project are documented here. The format follows
 - The hill-climb part is now public domain under the Unlicense, with no copyright holder.
   `skills/council/` keeps its MIT license from tstack.
 - The README flow chart is a Mermaid diagram, so it renders aligned on GitHub.
+- The README opens the install section with a "Tell your agent" message to paste into any agent,
+  and its install examples are agent-neutral. AGENTS.md installs into the agent's own skills
+  folder, with `.agents/skills/` as the shared default.
 
 ## [1.0.0] - 2026-11-04
 

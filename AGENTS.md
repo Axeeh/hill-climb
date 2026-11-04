@@ -12,17 +12,12 @@ This repo publishes two [Agent Skills](https://agentskills.io/specification):
 1. **Install both skills.** `hill-climb` doesn't work without `council`.
 2. **Ask about scope** if the user hasn't said: every project (user level) or only this one (project level).
 3. **Use the first method that works:**
-   - `npx skills add Axeeh/hill-climb` (add `-g` for user level). It needs Node.js 22.20+.
-   - In Claude Code: `/plugin marketplace add Axeeh/hill-climb`, then `/plugin install hill-climb@hill-climb`. Only the user can type these commands, so ask them to.
-   - Copy by hand: clone the repo and copy both folders under `skills/` into the agent's skills directory:
-
-     | Agent | User level | Project level |
-     |---|---|---|
-     | Claude Code | `~/.claude/skills/` | `.claude/skills/` |
-     | Codex and other agents that read `.agents/skills` | `~/.agents/skills/` | `.agents/skills/` |
+   - `npx skills add Axeeh/hill-climb` (add `-g` for user level). It needs Node.js 22.20+. Pick the agents the user works with.
+   - Copy by hand: clone the repo and copy both folders under `skills/` into the folder you load skills from. If you don't have your own, use the shared one: `~/.agents/skills/` (user level) or `.agents/skills/` (project level).
+   - If you run inside a host that drives agents from several providers (T3 Code, for example), install the skills where each of those agents can find them, so the jury works whichever agent the user picks.
 4. **Don't overwrite a different `council`.** If one already exists and is byte-identical to `skills/council/SKILL.md`, skip it. If it differs, the user has customised it: ask before replacing it.
 5. **Check prerequisites and report what's missing:** Python 3.9+ (`python --version`), and whether the agent can start subagents on models from three providers (in T3 Code, `orchestrator_capabilities`). Missing providers don't block the install, but runs will be marked as degraded.
-6. **Offer to record their settings** in their own `CLAUDE.md` or `AGENTS.md`, never in the skill files: council members, default target, where run logs go.
+6. **Offer to record their settings** in their own agent instructions file (`AGENTS.md` or its equivalent), never in the skill files: council members, default target, where run logs go.
 7. Confirm by listing the installed folders. Run `python <skills-dir>/hill-climb/scripts/aggregate.py <repo>/examples/landing-page` if the repo is still cloned: it must print `RESULT: PASS`.
 
 ## If you are changing this repository
@@ -37,7 +32,7 @@ skills/hill-climb/agents/openai.yaml  Codex UI metadata
 skills/council/                       vendored from tstack; never edit
 examples/landing-page/                sample run, also used by the tests
 tests/test_aggregate.py               standard-library unittest
-.claude-plugin/marketplace.json       Claude Code plugin manifest
+.claude-plugin/marketplace.json       plugin marketplace manifest
 ```
 
 ### Rules

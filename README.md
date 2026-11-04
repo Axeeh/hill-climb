@@ -2,7 +2,7 @@
 
 An agent skill that scores anything with a blind jury of models from three different providers, then keeps improving it, round after round, until every judge rates every category 9/10 or higher and above the best examples in its category.
 
-It works on anything you can show a judge: a UI or website, a landing page, an email, a social post, a proposal, code, a prompt or skill, a business plan. It runs in Claude Code, Codex and any agent that supports [Agent Skills](https://agentskills.io).
+It works on anything you can show a judge: a UI or website, a landing page, an email, a social post, a proposal, code, a prompt or skill, a business plan. It works with any agent that supports [Agent Skills](https://agentskills.io), and it fits [T3 Code](https://github.com/pingdotgg/t3code) best, because T3 Code can reach models from three providers.
 
 The method comes from Theo Browne's video **[Agents Sucked At UI (Until Today)](https://youtu.be/xq0eB8vxeqk)**. The jury is Theo's **`council`** skill from **[tstack](https://github.com/t3dotgg/tstack)**, included here unchanged. See [Credits](#credits).
 
@@ -40,7 +40,19 @@ These findings are the reason for each rule in the skill:
 
 You need both skills: `hill-climb` uses `council` as its jury. If you already have `council` from tstack, it's the same file, so keep yours.
 
-### With the `skills` CLI (any agent)
+### Tell your agent
+
+The easiest way: paste this into your agent (in T3 Code, any thread works):
+
+```text
+Install the hill-climb and council skills from https://github.com/Axeeh/hill-climb.
+Read the repo's AGENTS.md first and follow "If a user asked you to install these skills".
+Install them for every project, then tell me what's missing to run a full jury.
+```
+
+Change "for every project" to "for this project only" if you want them in one repo. The agent installs both skills, leaves an existing `council` alone if you changed it, checks Python and the providers it can reach, and runs the sample to confirm it works.
+
+### With the `skills` CLI
 
 ```bash
 npx skills add Axeeh/hill-climb            # choose the skills and agents interactively
@@ -49,22 +61,14 @@ npx skills add Axeeh/hill-climb -g         # install for every project
 
 This needs Node.js 22.20+. See [skills.sh](https://skills.sh) for the CLI.
 
-### As a Claude Code plugin
-
-```text
-/plugin marketplace add Axeeh/hill-climb
-/plugin install hill-climb@hill-climb
-```
-
 ### By hand
 
 ```bash
 git clone https://github.com/Axeeh/hill-climb
-cp -R hill-climb/skills/* ~/.claude/skills/    # Claude Code
-cp -R hill-climb/skills/* ~/.agents/skills/    # Codex and other agents that read .agents/skills
+cp -R hill-climb/skills/* ~/.agents/skills/
 ```
 
-To install the skills for one project only, copy them into that project's `.claude/skills/` or `.agents/skills/` instead.
+`~/.agents/skills/` is the shared folder most agents read. If yours loads skills from another folder, copy them there. To install them for one project only, use that project's `.agents/skills/`. If you switch between agents from different providers (as you can in T3 Code), make sure each of them can see the skills.
 
 ### Requirements
 
@@ -113,7 +117,7 @@ python skills/hill-climb/scripts/aggregate.py examples/landing-page --target 9
 
 ## Make it yours
 
-As tstack's README suggests, keep personal settings in your `CLAUDE.md` or `AGENTS.md`, not in the skill, so you can update the skill without losing them:
+As tstack's README suggests, keep personal settings in your agent's instructions file (usually `AGENTS.md`), not in the skill, so you can update the skill without losing them:
 
 ```markdown
 ## Skills
@@ -138,7 +142,7 @@ skills/
   council/              Theo's council skill, unchanged, with its MIT license
 examples/landing-page/  a sample run for the script
 tests/                  unit tests for aggregate.py (python -m unittest discover -s tests)
-.claude-plugin/         Claude Code plugin marketplace manifest
+.claude-plugin/         plugin marketplace manifest
 ```
 
 Contributions are welcome. Agents (and people) changing this repo should read [AGENTS.md](AGENTS.md) first.
