@@ -150,7 +150,7 @@ Contributions are welcome. Agents (and people) changing this repo should read [A
 ## Credits
 
 - **Method:** Theo Browne ([t3dotgg](https://github.com/t3dotgg)), from the video [Agents Sucked At UI (Until Today)](https://youtu.be/xq0eB8vxeqk) (November 2026). The council loop, scoring against competitors, the gated judge order, raising the bar from 9 to 10, and the eval-first two-phase climb all come from it. This repo turns the process into a reusable procedure.
-- **`council` skill:** from [t3dotgg/tstack](https://github.com/t3dotgg/tstack) (MIT, Copyright (c) 2026 Theo Browne), included unchanged at commit `1085050`. Its license is in [`skills/council/LICENSE`](skills/council/LICENSE).
+- **`council` skill:** from [t3dotgg/tstack](https://github.com/t3dotgg/tstack) (MIT, Copyright (c) 2026 Theo Browne). Its license is in [`skills/council/LICENSE`](skills/council/LICENSE).
 - The **hill-climb** skill, rubric presets, judge brief, aggregation script and tests are by [Axeeh](https://github.com/Axeeh).
 
 This project is independent and is not affiliated with or endorsed by Theo Browne or T3.
