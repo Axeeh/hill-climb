@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Example run passes
+        run: python skills/hill-climb/scripts/aggregate.py examples/landing-page --target 9
+
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Validate skills against the Agent Skills spec
+        run: |
+          pip install skills-ref
+          agentskills validate skills/hill-climb
+          agentskills validate skills/council
+      - name: Plugin manifest is valid JSON
+        run: python -m json.tool .claude-plugin/marketplace.json > /dev/null
+      - name: Vendored council skill is unchanged from tstack
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/t3dotgg/tstack/1085050f3baed1ac724caa4a8166145fb2ac88af/skills/council/SKILL.md \
+            | diff - skills/council/SKILL.md

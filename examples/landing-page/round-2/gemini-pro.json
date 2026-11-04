@@ -1,0 +1,56 @@
+{
+  "judge": "Gemini Pro",
+  "items": {
+    "A": {
+      "scores": {
+        "Offer clarity": 9.4,
+        "Trust": 9.2,
+        "Call to action": 9.5,
+        "Friction": 9.3,
+        "Distinctiveness": 9.1
+      },
+      "evidence": {},
+      "top_fixes": [
+        "Example fix 1",
+        "Example fix 2",
+        "Example fix 3"
+      ]
+    },
+    "B": {
+      "scores": {
+        "Offer clarity": 8.8,
+        "Trust": 8.7,
+        "Call to action": 8.9,
+        "Friction": 8.6,
+        "Distinctiveness": 8.4
+      },
+      "evidence": {
+        "Offer clarity": "Example evidence: what keeps this below 9, and where.",
+        "Trust": "Example evidence: what keeps this below 9, and where.",
+        "Call to action": "Example evidence: what keeps this below 9, and where.",
+        "Friction": "Example evidence: what keeps this below 9, and where.",
+        "Distinctiveness": "Example evidence: what keeps this below 9, and where."
+      },
+      "top_fixes": [
+        "Example fix 1",
+        "Example fix 2",
+        "Example fix 3"
+      ]
+    },
+    "C": {
+      "scores": {
+        "Offer clarity": 9.5,
+        "Trust": 9.4,
+        "Call to action": 9.6,
+        "Friction": 9.5,
+        "Distinctiveness": 9.3
+      },
+      "evidence": {},
+      "top_fixes": [
+        "Example fix 1",
+        "Example fix 2",
+        "Example fix 3"
+      ]
+    }
+  }
+}

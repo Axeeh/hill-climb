@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hill Climb"
+  short_description: "Score anything with a blind multi-model jury and improve it until it passes"
+  default_prompt: "Use $hill-climb to score this against the best references in its category, then tell me what would get it to a 9/10."

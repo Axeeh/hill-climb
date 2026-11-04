@@ -1,0 +1,67 @@
+{
+  "judge": "Claude Opus",
+  "items": {
+    "A": {
+      "scores": {
+        "Offer clarity": 8.0,
+        "Trust": 8.1,
+        "Call to action": 7.9,
+        "Friction": 8.0,
+        "Distinctiveness": 7.3
+      },
+      "evidence": {
+        "Offer clarity": "Example evidence: what keeps this below 9, and where.",
+        "Trust": "Example evidence: what keeps this below 9, and where.",
+        "Call to action": "Example evidence: what keeps this below 9, and where.",
+        "Friction": "Example evidence: what keeps this below 9, and where.",
+        "Distinctiveness": "Example evidence: what keeps this below 9, and where."
+      },
+      "top_fixes": [
+        "Example fix 1",
+        "Example fix 2",
+        "Example fix 3"
+      ]
+    },
+    "B": {
+      "scores": {
+        "Offer clarity": 8.0,
+        "Trust": 7.8,
+        "Call to action": 8.4,
+        "Friction": 8.5,
+        "Distinctiveness": 7.4
+      },
+      "evidence": {
+        "Offer clarity": "Example evidence: what keeps this below 9, and where.",
+        "Trust": "Example evidence: what keeps this below 9, and where.",
+        "Call to action": "Example evidence: what keeps this below 9, and where.",
+        "Friction": "Example evidence: what keeps this below 9, and where.",
+        "Distinctiveness": "Example evidence: what keeps this below 9, and where."
+      },
+      "top_fixes": [
+        "Example fix 1",
+        "Example fix 2",
+        "Example fix 3"
+      ]
+    },
+    "C": {
+      "scores": {
+        "Offer clarity": 8.9,
+        "Trust": 8.7,
+        "Call to action": 9.0,
+        "Friction": 8.8,
+        "Distinctiveness": 8.8
+      },
+      "evidence": {
+        "Offer clarity": "Example evidence: what keeps this below 9, and where.",
+        "Trust": "Example evidence: what keeps this below 9, and where.",
+        "Friction": "Example evidence: what keeps this below 9, and where.",
+        "Distinctiveness": "Example evidence: what keeps this below 9, and where."
+      },
+      "top_fixes": [
+        "Example fix 1",
+        "Example fix 2",
+        "Example fix 3"
+      ]
+    }
+  }
+}
