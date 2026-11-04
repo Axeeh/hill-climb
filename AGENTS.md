@@ -4,7 +4,7 @@ Guidance for coding agents working with this repository. People should start wit
 
 This repo publishes two [Agent Skills](https://agentskills.io/specification):
 
-- `skills/hill-climb/`: score an artifact with a blind multi-provider jury and improve it until it passes. Original work, MIT.
+- `skills/hill-climb/`: score an artifact with a blind multi-provider jury and improve it until it passes. Original work, public domain under the [Unlicense](LICENSE).
 - `skills/council/`: the jury that `hill-climb` calls. It is a **verbatim** copy from [t3dotgg/tstack](https://github.com/t3dotgg/tstack) at commit `1085050f3baed1ac724caa4a8166145fb2ac88af`, MIT, Copyright (c) 2026 Theo Browne.
 
 ## If a user asked you to install these skills
@@ -48,6 +48,7 @@ tests/test_aggregate.py               standard-library unittest
 - **Credit Theo.** Keep the video link and the tstack credit in `SKILL.md` and `README.md`. A new idea from Theo gets credited the same way.
 - **Quote exactly.** Numbers and quotes attributed to the video must match what is said in it. If you can't verify one, remove it.
 - **The script uses only the standard library** and supports Python 3.9+. It keeps its exit codes stable: 0 PASS, 1 FAIL, 2 bad input. Any change to its output format must also update the README example, the scorecard template and the tests.
+- **No personal names or copyright lines** for the hill-climb part: it is public domain under the Unlicense. Theo's copyright line in `skills/council/LICENSE` stays, because his MIT license requires it.
 - **English everywhere** in this repo.
 - **Versioning:** semver. A release bumps `metadata.version` in `skills/hill-climb/SKILL.md`, both `version` fields in `.claude-plugin/marketplace.json`, and adds a `CHANGELOG.md` entry.
 

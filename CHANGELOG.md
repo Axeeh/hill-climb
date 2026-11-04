@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [1.0.1] - 2026-11-04
+
+### Changed
+
+- The hill-climb part is now public domain under the Unlicense, with no copyright holder.
+  `skills/council/` keeps its MIT license from tstack.
+- The README flow chart is a Mermaid diagram, so it renders aligned on GitHub.
+
 ## [1.0.0] - 2026-11-04
 
 ### Added

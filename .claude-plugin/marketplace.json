@@ -1,25 +1,25 @@
 {
   "name": "hill-climb",
   "owner": {
-    "name": "Alessio Carnevale"
+    "name": "Axeeh"
   },
   "metadata": {
     "description": "Score anything with a blind multi-provider jury and improve it until every judge gives it a 9/10.",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "plugins": [
     {
       "name": "hill-climb",
       "description": "The hill-climb skill plus the council skill it uses as its jury (council from t3dotgg/tstack, MIT).",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "source": "./",
       "strict": false,
       "author": {
-        "name": "Alessio Carnevale"
+        "name": "Axeeh"
       },
       "homepage": "https://github.com/Axeeh/hill-climb",
       "repository": "https://github.com/Axeeh/hill-climb",
-      "license": "MIT",
+      "license": "Unlicense",
       "keywords": ["skills", "evaluation", "llm-as-judge", "council", "hill-climbing", "design-review"],
       "skills": [
         "./skills/hill-climb",

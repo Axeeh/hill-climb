@@ -8,13 +8,13 @@ The method comes from Theo Browne's video **[Agents Sucked At UI (Until Today)](
 
 ## How it works
 
-```
- define the hill ──► council scores it (blind) ──► aggregate.py: PASS?
-  rubric, references,      A / B / C, shuffled,          │
-  target, guardrails       fresh judges each round       ├─ yes ─► scorecard (and maybe raise the bar)
-        ▲                                                 │
-        └──────── fix what the judges agree on ◄──── no ──┘
-                  keep the best version (ratchet)
+```mermaid
+flowchart TD
+    A["<b>1. Define the hill</b><br/>rubric, references, target, guardrails"] --> B["<b>2. Council scores it, blind</b><br/>items shown as A / B / C in a shuffled order,<br/>fresh judges every round"]
+    B --> C{"<b>3. aggregate.py</b><br/>PASS?"}
+    C -- yes --> D["<b>Scorecard</b><br/>optionally raise the bar on a separate branch"]
+    C -- no --> E["<b>4. Fix</b><br/>what two or more judges agree on,<br/>keep the best version (ratchet)"]
+    E --> B
 ```
 
 1. **Define the hill.** Pick a rubric (4–7 categories with anchors for 6, 8 and 10), 1–3 best-in-class references, a target (default ≥ 9.0 everywhere and ≥ the best reference), a round budget and guardrails. Anything a program can measure (tests, Lighthouse, word count, an eval set) becomes a pass/fail gate instead of an opinion.
@@ -147,10 +147,12 @@ Contributions are welcome. Agents (and people) changing this repo should read [A
 
 - **Method:** Theo Browne ([t3dotgg](https://github.com/t3dotgg)), from the video [Agents Sucked At UI (Until Today)](https://youtu.be/xq0eB8vxeqk) (November 2026). The council loop, scoring against competitors, the gated judge order, raising the bar from 9 to 10, and the eval-first two-phase climb all come from it. This repo turns the process into a reusable procedure.
 - **`council` skill:** from [t3dotgg/tstack](https://github.com/t3dotgg/tstack) (MIT, Copyright (c) 2026 Theo Browne), included unchanged at commit `1085050`. Its license is in [`skills/council/LICENSE`](skills/council/LICENSE).
-- The **hill-climb** skill, rubric presets, judge brief, aggregation script and tests are by Alessio Carnevale ([Axeeh](https://github.com/Axeeh)).
+- The **hill-climb** skill, rubric presets, judge brief, aggregation script and tests are by [Axeeh](https://github.com/Axeeh).
 
 This project is independent and is not affiliated with or endorsed by Theo Browne or T3.
 
 ## License
 
-[MIT](LICENSE). `skills/council/` keeps its own MIT license from tstack.
+Everything except `skills/council/` is released into the public domain under [The Unlicense](LICENSE): use it, change it and ship it however you like, no attribution required.
+
+`skills/council/` is not public domain. It keeps Theo Browne's MIT license from tstack, so copies of it must keep [`skills/council/LICENSE`](skills/council/LICENSE).
