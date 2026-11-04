@@ -8,7 +8,7 @@ All notable changes to this project are documented here. The format follows
 
 ### Changed
 
-- Shorter README with a simpler diagram: what it does, install, two examples, credits.
+- Shorter README without the diagram: what it does, install, two examples, credits.
 
 ## [1.0.1] - 2026-11-04
 

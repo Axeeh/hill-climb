@@ -8,15 +8,6 @@ Based on Theo Browne's video **[Agents Sucked At UI (Until Today)](https://youtu
 
 ## How it works
 
-```mermaid
-flowchart LR
-    A[Pick the goal] --> B[Judges score it]
-    B --> C{9/10 from all?}
-    C -- no --> D[Improve it]
-    D --> B
-    C -- yes --> E[Done]
-```
-
 1. You choose what to judge, what "good" means and 1–3 best-in-class examples to compare against.
 2. The judges score your work next to those examples, without knowing which one is yours.
 3. A script adds up the scores and says pass or fail.
