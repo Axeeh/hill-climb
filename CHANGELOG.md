@@ -4,6 +4,12 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Shorter README with a simpler diagram: what it does, install, two examples, credits.
+
 ## [1.0.1] - 2026-11-04
 
 ### Changed
