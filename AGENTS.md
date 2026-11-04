@@ -41,7 +41,7 @@ tests/test_aggregate.py               standard-library unittest
 - **Follow the Agent Skills spec.** `name` matches the folder name (lowercase, hyphens, at most 64 characters). `description` is at most 1024 characters and says what the skill does and when to use it, with trigger phrases. File references are relative to the skill root and go one level deep (`references/x.md`, `scripts/x.py`).
 - **Keep it generic.** No personal names, clients, private paths or house rules inside the skill. Personal settings belong in the user's `CLAUDE.md` or `AGENTS.md`, and the skill says so.
 - **Credit Theo.** Keep the video link and the tstack credit in `SKILL.md` and `README.md`.
-- **Keep the README short.** It is for people deciding whether to install: what it does, how it works in four steps, install, two examples, credits. No diagrams. Details go in `SKILL.md`, `references/` or this file. A new idea from Theo gets credited the same way.
+- **Keep the README short.** It is for people deciding whether to install: what it does, a simple diagram, install, two examples, credits. Details go in `SKILL.md`, `references/` or this file. A new idea from Theo gets credited the same way.
 - **Quote exactly.** Numbers and quotes attributed to the video must match what is said in it. If you can't verify one, remove it.
 - **The script uses only the standard library** and supports Python 3.9+. It keeps its exit codes stable: 0 PASS, 1 FAIL, 2 bad input. Any change to its output format must also update the scorecard template and the tests.
 - **No personal names or copyright lines** for the hill-climb part: it is public domain under the Unlicense. Theo's copyright line in `skills/council/LICENSE` stays, because his MIT license requires it.
