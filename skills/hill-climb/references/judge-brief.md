@@ -8,6 +8,7 @@ Rules for the parent agent while filling it in:
 - MUST: items labelled A, B, C… in a **new random order every round**. Write the label → item mapping to `round-N/labels.json` (`"ours"` for our item, which `aggregate.py` reads) and to `run.md`, never into the brief.
 - MUST: no hint about which item is ours. Strip our branding only if the references keep theirs. If branding is part of the judgement (a logo, a brand voice), leave every item's branding in and accept the bias.
 - MUST: a new delegate every round, with no earlier scores or findings.
+- MUST: the items live in a staging folder outside the project and the run folder, with file names that are only labels (`A-390.png`, `B.md`). Never point a judge at the run folder, at `labels.json` or at a path that names a product.
 - Give the same context to everyone: the audience, the goal of the artifact, the medium (mobile Instagram feed, desktop app, client inbox).
 
 ---
@@ -16,7 +17,7 @@ Rules for the parent agent while filling it in:
 
 You are an expert reviewer of **{artifact type}** for **{audience / use context}**. You are reviewing independently; other reviewers exist, but you will not see their work.
 
-**Read-only.** Do not change any file. Look, evaluate and report.
+**Read-only.** Do not change any file. Open only the files listed below, nothing else. Look, evaluate and report.
 
 ### What you are reviewing
 

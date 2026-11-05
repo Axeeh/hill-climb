@@ -35,6 +35,7 @@ jobs:
         run: |
           pip install skills-ref
           agentskills validate skills/hill-climb
+          agentskills validate skills/blind-refine
           agentskills validate skills/council
       - name: Plugin manifest is valid JSON
         run: python -m json.tool .claude-plugin/marketplace.json > /dev/null

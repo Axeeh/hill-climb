@@ -105,6 +105,46 @@ class AggregateTests(unittest.TestCase):
         self.assertEqual(code, 2, out)
         self.assertIn("label Z not in labels.json", out)
 
+    def test_late_strict_judge_is_not_a_plateau(self):
+        # J1 climbs; J3 joins in the last round and starts lower. Mixing judges would look flat.
+        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"X": 7.0}}})
+        write_round(self.dir, 1, {"A": "ours"}, {"J1": {"ours": {"X": 8.0}}})
+        write_round(self.dir, 2, {"A": "ours"}, {"J1": {"ours": {"X": 9.0}}, "J3": {"ours": {"X": 7.9}}})
+        code, out = run(self.dir)
+        self.assertEqual(code, 1, out)
+        self.assertNotIn("WARNING: plateau", out)
+        self.assertNotIn("REGRESSION", out)
+
+    def test_regression_is_reported_per_judge(self):
+        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"X": 9.0}}, "J2": {"ours": {"X": 8.5}}})
+        write_round(self.dir, 1, {"A": "ours"}, {"J1": {"ours": {"X": 8.4}}, "J2": {"ours": {"X": 8.2}}})
+        code, out = run(self.dir)
+        self.assertEqual(code, 1, out)
+        self.assertIn("REGRESSION: J1 went from 9.0 to 8.4", out)
+        self.assertNotIn("REGRESSION: J2", out)  # a 0.3 drop is noise
+
+    def test_duplicate_judge_is_a_data_error(self):
+        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"X": 9.5}}})
+        (self.dir / "round-0" / "copy.json").write_text(
+            '{"judge": "J1", "items": {"A": {"scores": {"X": 9}}}}', encoding="utf-8")
+        code, out = run(self.dir)
+        self.assertEqual(code, 2, out)
+        self.assertIn("judge 'J1' already has a file", out)
+
+    def test_category_not_in_rubric_is_a_data_error(self):
+        (self.dir / "rubric.json").write_text('["Color"]', encoding="utf-8")
+        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"Colour": 9.5}}})
+        code, out = run(self.dir)
+        self.assertEqual(code, 2, out)
+        self.assertIn("categories not in rubric.json: Colour", out)
+
+    def test_category_missing_from_rubric_fails(self):
+        (self.dir / "rubric.json").write_text('["X", "Y"]', encoding="utf-8")
+        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"X": 9.5}}, "J2": {"ours": {"X": 9.5, "Y": 9.5}}})
+        code, out = run(self.dir)
+        self.assertEqual(code, 1, out)
+        self.assertIn("J1: no score for 'Y'", out)
+
     def test_empty_folder_is_a_data_error(self):
         code, _ = run(self.dir)
         self.assertEqual(code, 2)
