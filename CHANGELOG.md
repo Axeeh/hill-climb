@@ -4,6 +4,20 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-11-06
+
+### Added
+
+- `references/run-format.md` in both `hill-climb` and `blind-climb`, documenting the run manifest (`run.json`), immutable snapshot lineage (`round.json`), and required programmatic check evidence (`checks.json`).
+- `CONTRIBUTING.md` with pull request contribution rules and pre-PR checks.
+
+### Changed
+
+- Rename `blind-refine` to `blind-climb` across the skill folder, plugin manifest, docs, tests and CI.
+- Harden `aggregate.py` and `tally.py` so missing manifests, missing required panel members, fewer than three distinct providers, failed or missing check evidence, or missing final checks report `INCOMPLETE` / `INVALID` instead of promoting a candidate or finishing a run.
+- Add pairwise blind candidate-vs-incumbent selection to `hill-climb` Climb rounds alongside rubric scoring.
+- Simplify the README install prompt to a single line and point agents to `AGENTS.md` at the bottom.
+
 ## [1.1.0] - 2026-11-04
 
 ### Added

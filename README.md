@@ -22,18 +22,16 @@ flowchart LR
 3. A script adds up the scores and says pass or fail.
 4. If it fails, the agent fixes what the judges agree on and tries again.
 
-## Without scores: blind-refine
+## Without scores: blind-climb
 
-The repo also has `blind-refine`, for when you don't want numbers in the loop at all, so the reviewers can't be biased by them. Each round the reviewers see two versions in random order, without knowing which one is newer, pick the one they would ship and say what's wrong with each. The better version stays, its problems get fixed, and it stops when nobody finds anything major.
+The repo also has `blind-climb`, for when you don't want numbers in the loop at all, so the reviewers can't be biased by them. Each round the reviewers see two versions in random order, without knowing which one is newer, pick the one they would ship and say what's wrong with each. The better version stays, its problems get fixed, and it stops when nobody finds anything major.
 
 ## Install
 
 Paste this into your agent:
 
 ```text
-Install the hill-climb, blind-refine and council skills from https://github.com/Axeeh/hill-climb.
-Read the repo's AGENTS.md first and follow "If a user asked you to install these skills".
-Install them for every project, then tell me what's missing to run a full jury.
+Install the hill-climb, blind-climb and council skills from https://github.com/Axeeh/hill-climb.
 ```
 
 Or do it yourself:
@@ -51,12 +49,16 @@ Ask your agent things like:
 ```text
 Score our pricing page against Linear's and Stripe's.
 Get this cold email to 9/10 from every judge. Max 5 rounds.
-Refine this proposal with blind reviewers, no scores.
+Blind climb this proposal with blind reviewers, no scores.
 ```
 
 **Score** gives you one round of grades and changes nothing. **Climb** keeps improving until it passes, on a copy or a branch, and asks for your OK before it starts.
 
 Climbing uses a lot of tokens, so set a maximum number of rounds.
+
+## Contributing
+
+If you have changes or improvements to propose, open a pull request. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md) for the rules and the checks CI runs on every PR.
 
 ## Credits
 
@@ -68,3 +70,5 @@ Not affiliated with Theo Browne or T3.
 ## License
 
 Public domain under [The Unlicense](LICENSE), except `skills/council/`, which keeps Theo's MIT license.
+
+If you are an agent installing or working on these skills, read [AGENTS.md](AGENTS.md) first.

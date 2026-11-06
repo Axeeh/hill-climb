@@ -1,0 +1,66 @@
+{
+  "judge": "Gemini Pro",
+  "items": {
+    "A": {
+      "scores": {
+        "Offer clarity": 6.4,
+        "Trust": 6.3,
+        "Call to action": 6.7,
+        "Friction": 7.1,
+        "Distinctiveness": 6.0
+      },
+      "evidence": {
+        "Offer clarity": "Example evidence: what keeps this below 9, and where.",
+        "Trust": "Example evidence: what keeps this below 9, and where.",
+        "Call to action": "Example evidence: what keeps this below 9, and where.",
+        "Friction": "Example evidence: what keeps this below 9, and where.",
+        "Distinctiveness": "Example evidence: what keeps this below 9, and where."
+      },
+      "top_fixes": [
+        "Example fix 1",
+        "Example fix 2",
+        "Example fix 3"
+      ]
+    },
+    "B": {
+      "scores": {
+        "Offer clarity": 9.1,
+        "Trust": 8.9,
+        "Call to action": 9.2,
+        "Friction": 8.8,
+        "Distinctiveness": 8.9
+      },
+      "evidence": {
+        "Trust": "Example evidence: what keeps this below 9, and where.",
+        "Friction": "Example evidence: what keeps this below 9, and where.",
+        "Distinctiveness": "Example evidence: what keeps this below 9, and where."
+      },
+      "top_fixes": [
+        "Example fix 1",
+        "Example fix 2",
+        "Example fix 3"
+      ]
+    },
+    "C": {
+      "scores": {
+        "Offer clarity": 8.3,
+        "Trust": 8.2,
+        "Call to action": 8.4,
+        "Friction": 8.1,
+        "Distinctiveness": 7.8
+      },
+      "evidence": {
+        "Offer clarity": "Example evidence: what keeps this below 9, and where.",
+        "Trust": "Example evidence: what keeps this below 9, and where.",
+        "Call to action": "Example evidence: what keeps this below 9, and where.",
+        "Friction": "Example evidence: what keeps this below 9, and where.",
+        "Distinctiveness": "Example evidence: what keeps this below 9, and where."
+      },
+      "top_fixes": [
+        "Example fix 1",
+        "Example fix 2",
+        "Example fix 3"
+      ]
+    }
+  }
+}

@@ -62,6 +62,31 @@
         "Example fix 2",
         "Example fix 3"
       ]
+    },
+    "D": {
+      "scores": {
+        "Offer clarity": 6.0,
+        "Trust": 6.2,
+        "Call to action": 6.5,
+        "Friction": 7.0,
+        "Distinctiveness": 5.8
+      },
+      "evidence": {
+        "Offer clarity": "Example evidence: what keeps this below 9, and where.",
+        "Trust": "Example evidence: what keeps this below 9, and where.",
+        "Call to action": "Example evidence: what keeps this below 9, and where.",
+        "Friction": "Example evidence: what keeps this below 9, and where.",
+        "Distinctiveness": "Example evidence: what keeps this below 9, and where."
+      },
+      "top_fixes": [
+        "Example fix 1",
+        "Example fix 2",
+        "Example fix 3"
+      ]
     }
+  },
+  "comparison": {
+    "winner": "B",
+    "reason": "Clearer above-the-fold offer and stronger call to action than D."
   }
 }

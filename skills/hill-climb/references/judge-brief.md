@@ -9,6 +9,8 @@ Rules for the parent agent while filling it in:
 - MUST: no hint about which item is ours. Strip our branding only if the references keep theirs. If branding is part of the judgement (a logo, a brand voice), leave every item's branding in and accept the bias.
 - MUST: a new delegate every round, with no earlier scores or findings.
 - MUST: the items live in a staging folder outside the project and the run folder, with file names that are only labels (`A-390.png`, `B.md`). Never point a judge at the run folder, at `labels.json` or at a path that names a product.
+- MUST: after the Climb baseline, include the candidate and the best retained snapshot, plus the external references. Privately map them as `ours` and `incumbent`, with snapshot IDs in `round.json`. In the brief identify only the two labels to compare (for example A and C), never which is newer, ours, or the previous best. Omit the comparison paragraph and JSON member for baseline/Score rounds.
+- MUST: `judge` in the answer must match the model name assigned in `run.json`. Supply that reviewer's own name when dispatching; the artifact context, rubric and comparison instructions remain identical for all members.
 - Give the same context to everyone: the audience, the goal of the artifact, the medium (mobile Instagram feed, desktop app, client inbox).
 
 ---
@@ -39,11 +41,13 @@ For every score under 9.0, give concrete evidence: the exact element, line, pass
 
 Then list the **3 changes with the most impact** for each item, most important first.
 
+{For a comparison round only: Between **{label X}** and **{label Y}**, which version would you ship for this audience and task? Choose one of those labels, or `tie` if neither has a justified advantage. Give concrete evidence for your choice. Judge the actual task outcome; do not infer chronology or authorship. The other items are external references, not eligible winners of this two-version comparison.}
+
 End your answer with exactly one JSON block in this shape, and nothing after it:
 
 ```json
 {
-  "judge": "<your model name>",
+  "judge": "<assigned model name, exactly>",
   "items": {
     "A": {
       "scores": {"<category>": 7.5, "<category>": 8.0},
@@ -51,8 +55,10 @@ End your answer with exactly one JSON block in this shape, and nothing after it:
       "top_fixes": ["...", "...", "..."]
     },
     "B": { "scores": {}, "evidence": {}, "top_fixes": [] }
-  }
+  },
+  "comparison": {"winner": "<one of the two comparison labels, or tie>", "reason": "Specific evidence for the preference or tie"}
 }
 ```
 
 Category names in `scores` must match the rubric exactly.
+Score every listed item in every category. Return scores as JSON numbers from 1.0 to 10.0, never numeric strings. Include `comparison` only when a comparison pair was supplied.

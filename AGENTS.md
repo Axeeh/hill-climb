@@ -5,12 +5,12 @@ Guidance for coding agents working with this repository. People should start wit
 This repo publishes three [Agent Skills](https://agentskills.io/specification):
 
 - `skills/hill-climb/`: score an artifact with a blind multi-provider jury and improve it until it passes. Original work, public domain under the [Unlicense](LICENSE).
-- `skills/blind-refine/`: the score-free sibling. Blind reviewers pick between two versions and list what's wrong; the preferred one survives and gets fixed. Original work, public domain under the Unlicense.
-- `skills/council/`: the jury that `hill-climb` and `blind-refine` call. It is a **verbatim** copy from [t3dotgg/tstack](https://github.com/t3dotgg/tstack) at commit `1085050f3baed1ac724caa4a8166145fb2ac88af`, MIT, Copyright (c) 2026 Theo Browne.
+- `skills/blind-climb/`: the score-free sibling. Blind reviewers pick between two versions and list what's wrong; the preferred one survives and gets fixed. Original work, public domain under the Unlicense.
+- `skills/council/`: the jury that `hill-climb` and `blind-climb` call. It is a **verbatim** copy from [t3dotgg/tstack](https://github.com/t3dotgg/tstack) at commit `1085050f3baed1ac724caa4a8166145fb2ac88af`, MIT, Copyright (c) 2026 Theo Browne.
 
 ## If a user asked you to install these skills
 
-1. **Install all three skills.** `hill-climb` and `blind-refine` don't work without `council`. If the user asks for only one of the first two, install it with `council`.
+1. **Install all three skills.** `hill-climb` and `blind-climb` don't work without `council`. If the user asks for only one of the first two, install it with `council`.
 2. **Ask about scope** if the user hasn't said: every project (user level) or only this one (project level).
 3. **Use the first method that works:**
    - `npx skills add Axeeh/hill-climb` (add `-g` for user level). It needs Node.js 22.20+. Pick the agents the user works with.
@@ -23,33 +23,37 @@ This repo publishes three [Agent Skills](https://agentskills.io/specification):
 
 ## If you are changing this repository
 
+If you have changes to propose, open a pull request. Follow the layout, rules and pre-commit checks below so CI passes on your PR.
+
 ### Layout
 
 ```text
 skills/hill-climb/SKILL.md            the procedure (keep it under 500 lines)
-skills/hill-climb/references/         rubrics.md, judge-brief.md, scorecard-template.md
+skills/hill-climb/references/         rubrics.md, judge-brief.md, run-format.md, scorecard-template.md
 skills/hill-climb/scripts/aggregate.py
 skills/hill-climb/agents/openai.yaml  Codex UI metadata
-skills/blind-refine/SKILL.md          the score-free loop
-skills/blind-refine/references/       review-brief.md
-skills/blind-refine/scripts/tally.py
+skills/blind-climb/SKILL.md           the score-free loop
+skills/blind-climb/references/        review-brief.md, run-format.md
+skills/blind-climb/scripts/tally.py
+skills/blind-climb/agents/openai.yaml Codex UI metadata
 skills/council/                       vendored from tstack; never edit
 examples/landing-page/                sample run, also used by the tests
 tests/                                standard-library unittest for both scripts
+CONTRIBUTING.md                       contribution rules and PR checks
 .claude-plugin/marketplace.json       plugin marketplace manifest
 ```
 
 ### Rules
 
-- **Never edit `skills/council/`.** To update it, copy `skills/council/SKILL.md` and `LICENSE` from a newer tstack commit, update the commit hash here, in the CI workflow and in `CHANGELOG.md`. Then check that Step 2 of `hill-climb` and of `blind-refine` still matches what council does.
+- **Never edit `skills/council/`.** To update it, copy `skills/council/SKILL.md` and `LICENSE` from a newer tstack commit, update the commit hash here, in the CI workflow and in `CHANGELOG.md`. Then check that Step 2 of `hill-climb` and of `blind-climb` still matches what council does.
 - **Follow the Agent Skills spec.** `name` matches the folder name (lowercase, hyphens, at most 64 characters). `description` is at most 1024 characters and says what the skill does and when to use it, with trigger phrases. File references are relative to the skill root and go one level deep (`references/x.md`, `scripts/x.py`).
 - **Keep it generic.** No personal names, clients, private paths or house rules inside the skill. Personal settings belong in the user's `CLAUDE.md` or `AGENTS.md`, and the skill says so.
 - **Credit Theo.** Keep the video link and the tstack credit in `SKILL.md` and `README.md`. A new idea from Theo gets credited the same way.
-- **Keep the README short.** It is for people deciding whether to install: what it does, a simple diagram, install, a few examples, credits. Details go in `SKILL.md`, `references/` or this file.
+- **Keep the README short.** It is for people deciding whether to install: what it does, a simple diagram, install, a few examples, contributing, credits. Details go in `SKILL.md`, `references/` or this file.
 - **Quote exactly.** Numbers and quotes attributed to the video must match what is said in it. If you can't verify one, remove it.
-- **The scripts use only the standard library** and support Python 3.9+. Their exit codes stay stable: `aggregate.py` 0 PASS, 1 FAIL, 2 bad input; `tally.py` 0 DONE, 1 CONTINUE, 2 bad input, 3 PLATEAU. Any change to an output format must also update the tests (and, for `aggregate.py`, the scorecard template).
-- **No scores in `blind-refine`.** Its brief, its script and its PR table never ask for or show a number; that is the point of the skill.
-- **No personal names or copyright lines** for `hill-climb` and `blind-refine`: they are public domain under the Unlicense. Theo's copyright line in `skills/council/LICENSE` stays, because his MIT license requires it.
+- **The scripts use only the standard library** and support Python 3.9+. Their exit codes stay stable: `aggregate.py` 0 PASS, 1 FAIL, 2 INVALID, 3 INCOMPLETE; `tally.py` 0 DONE, 1 CONTINUE, 2 INVALID, 3 PLATEAU, 4 INCOMPLETE, 5 REVIEW_REQUIRED. Any change to an output format must also update the tests and `references/run-format.md` (and, for `aggregate.py`, `references/scorecard-template.md`).
+- **No scores in `blind-climb`.** Its brief, its script and its PR table never ask for or show a number; that is the point of the skill.
+- **No personal names or copyright lines** for `hill-climb` and `blind-climb`: they are public domain under the Unlicense. Theo's copyright line in `skills/council/LICENSE` stays, because his MIT license requires it.
 - **English everywhere** in this repo.
 - **Versioning:** semver. A release bumps `metadata.version` in both original skills' `SKILL.md`, both `version` fields in `.claude-plugin/marketplace.json`, and adds a `CHANGELOG.md` entry.
 
@@ -58,7 +62,7 @@ tests/                                standard-library unittest for both scripts
 ```bash
 python -m unittest discover -s tests -v
 python skills/hill-climb/scripts/aggregate.py examples/landing-page --target 9   # RESULT: PASS
-pip install skills-ref && agentskills validate skills/hill-climb && agentskills validate skills/blind-refine && agentskills validate skills/council
+pip install skills-ref && agentskills validate skills/hill-climb && agentskills validate skills/blind-climb && agentskills validate skills/council
 python -m json.tool .claude-plugin/marketplace.json > /dev/null
 ```
 

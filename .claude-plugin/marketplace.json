@@ -5,13 +5,13 @@
   },
   "metadata": {
     "description": "Score anything with a blind multi-provider jury and improve it until every judge gives it a 9/10, or improve it with blind reviewers and no scores at all.",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "plugins": [
     {
       "name": "hill-climb",
-      "description": "The hill-climb and blind-refine skills plus the council skill they use as their panel (council from t3dotgg/tstack, MIT).",
-      "version": "1.1.0",
+      "description": "The hill-climb and blind-climb skills plus the council skill they use as their panel (council from t3dotgg/tstack, MIT).",
+      "version": "1.2.0",
       "source": "./",
       "strict": false,
       "author": {
@@ -31,7 +31,7 @@
       ],
       "skills": [
         "./skills/hill-climb",
-        "./skills/blind-refine",
+        "./skills/blind-climb",
         "./skills/council"
       ]
     }

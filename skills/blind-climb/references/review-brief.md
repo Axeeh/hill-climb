@@ -8,6 +8,7 @@ Rules for the parent agent while filling it in:
 - MUST: versions labelled X and Y in a **new random order every round**. Write the label → version mapping to `round-N/labels.json` (`current`, `candidate`; `original`, `final` for the final check), never into the brief.
 - MUST: the versions live in a staging folder outside the project and the run folder, with file names that are only labels (`X-390.png`, `Y.md`). Never point a reviewer at the run folder or at a path that names a version.
 - MUST: a new delegate every round, with no earlier findings or decisions.
+- MUST: the parent declares the full panel in `run.json` before dispatching. Give each reviewer its assigned model name and require an exact match in `reviewer`; everything else in the artifact brief is identical. Keep the manifest, snapshot IDs and check records outside the brief.
 - Round 0 has only one version (X). Drop the comparison parts and keep the rest.
 - References are optional context, labelled R1, R2. Say what they are ("strong examples of the same kind"), never that ours should beat them.
 
@@ -29,20 +30,20 @@ Two versions of the same **{artifact type}**, labelled X and Y. {What it must ac
 
 ### What to do
 
-1. **Pick the one you would ship**, X or Y, for this audience and purpose, and say why in two or three sentences. If they are equally good, pick the one with fewer serious problems.
+1. **Pick the one you would ship**, X or Y, for this audience and purpose, and say why in two or three sentences. If one has fewer serious problems, prefer it. If neither has a justified advantage, return `tie` rather than inventing a preference.
 2. **For each version, list what is wrong with it**, most important first. For each finding give:
    - `severity`: `major` (the audience would notice it and it hurts the purpose), `minor` (an expert would notice it), or `nit` (a matter of taste);
    - `where`: the exact element, line, passage or screen region;
    - `problem`: what is wrong and why it matters for this audience;
    - `fix`: a concrete change.
    Do not cite anything you cannot see. If you are unsure, say so instead of guessing. Do not invent problems: if a version has none worth fixing, its list may be empty.
-3. **Say whether each version is ready to ship as it is.**
+3. **Say whether each version is ready to ship as it is.** Use literal JSON booleans `true` or `false`, never strings. Include a readiness value and an explicit findings list for every listed version; an empty list means you found nothing worth fixing. Do not omit a version you did not prefer.
 
 End your answer with exactly one JSON block in this shape, and nothing after it:
 
 ```json
 {
-  "reviewer": "<your model name>",
+  "reviewer": "<assigned model name, exactly>",
   "preferred": "X",
   "why": "two or three sentences",
   "ready_to_ship": {"X": false, "Y": false},
@@ -54,3 +55,5 @@ End your answer with exactly one JSON block in this shape, and nothing after it:
   }
 }
 ```
+
+`preferred` must be `X`, `Y` or `tie`. For the single-version baseline, omit the comparison instruction and set `preferred` to that version's label or `null`; still provide `why`, readiness and findings for it.
