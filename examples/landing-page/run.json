@@ -1,0 +1,10 @@
+{
+  "mode": "climb",
+  "judges": [
+    {"name": "Claude Opus", "provider": "anthropic"},
+    {"name": "GPT Sol", "provider": "openai"},
+    {"name": "Gemini Pro", "provider": "google"}
+  ],
+  "references": ["Category leader", "Best local competitor"],
+  "checks": ["build"]
+}

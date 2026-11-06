@@ -5,7 +5,7 @@ Write `scorecard.md` from this skeleton, in the user's language. Paste the table
 ```markdown
 # Scorecard: {what was scored}
 
-**Date:** {YYYY-MM-DD} · **Mode:** {Score | Climb} · **Result:** {PASS | FAIL | stopped on plateau | stopped on budget}
+**Date:** {YYYY-MM-DD} · **Mode:** {Score | Climb} · **Result:** {PASS | FAIL | INVALID | INCOMPLETE | stopped on plateau | stopped on budget}
 
 ## Summary
 
@@ -19,6 +19,11 @@ Write `scorecard.md` from this skeleton, in the user's language. Paste the table
 - **Programmatic checks:** {list, with final result}
 - **Guardrails:** {what must not get worse}
 - **Jury:** {council members, order they joined, advisory members and why}
+- **Best retained snapshot:** {BEST ID from aggregate.py; link to immutable copy or scoped commit}
+
+## Blind selection
+
+{Paste aggregate.py's selection table: candidate and incumbent snapshot IDs, votes, KEEP/REJECT/INCOMPLETE. Round 0 establishes the baseline; later rounds compare against BEST, never merely the last attempt.}
 
 ## Minimum score per round (ours)
 
@@ -30,9 +35,11 @@ Write `scorecard.md` from this skeleton, in the user's language. Paste the table
 
 ## Categories, final round
 
-| Category | Ours (lowest judge) | Best reference (lowest judge) | Smallest per-judge gap |
-|---|---|---|---|
-| {…} | | | |
+| Judge | Category | Candidate | Best external reference | Gap |
+|---|---|---|---|---|
+| {…} | | | | |
+
+{The incumbent is excluded from external references. State whether the final candidate was retained; a rejected candidate's scores do not describe BEST. Missing checks or reviews are INCOMPLETE, never PASS.}
 
 ## What changed
 

@@ -1,0 +1,9 @@
+{
+  "candidate": "snapshots/v1",
+  "results": {
+    "build": {
+      "passed": true,
+      "evidence": "npm run build: exit 0"
+    }
+  }
+}

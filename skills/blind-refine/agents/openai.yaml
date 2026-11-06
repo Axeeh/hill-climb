@@ -1,4 +1,0 @@
-interface:
-  display_name: "Blind Refine"
-  short_description: "Improve anything with blind reviewers who never see a score"
-  default_prompt: "Use $blind-refine to improve this with blind reviewers until they have nothing major left to fix."

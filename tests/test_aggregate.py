@@ -2,153 +2,241 @@
 
 Run from the repo root:  python -m unittest discover -s tests -v
 """
+import contextlib
+import importlib.util
+import io
 import json
-import subprocess
+import math
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 
+sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parent.parent
-SCRIPT = ROOT / "skills" / "hill-climb" / "scripts" / "aggregate.py"
-EXAMPLE = ROOT / "examples" / "landing-page"
-
-
-def run(folder, *args):
-    proc = subprocess.run(
-        [sys.executable, str(SCRIPT), str(folder), *args],
-        capture_output=True, text=True, encoding="utf-8",
-    )
-    return proc.returncode, proc.stdout + proc.stderr
-
-
-def write_round(base, n, labels, judges):
-    """judges: {judge_name: {real_item_name: {category: score}}}"""
-    folder = Path(base) / f"round-{n}"
-    folder.mkdir(parents=True)
-    (folder / "labels.json").write_text(json.dumps(labels), encoding="utf-8")
-    by_name = {v: k for k, v in labels.items()}
-    for judge, items in judges.items():
-        payload = {"judge": judge, "items": {by_name[name]: {"scores": s} for name, s in items.items()}}
-        (folder / f"{judge.replace(' ', '-').lower()}.json").write_text(json.dumps(payload), encoding="utf-8")
+SCRIPT = ROOT / 'skills' / 'hill-climb' / 'scripts' / 'aggregate.py'
+EXAMPLE = ROOT / 'examples' / 'landing-page'
+spec = importlib.util.spec_from_file_location('aggregate', SCRIPT)
+aggregate = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(aggregate)
 
 
 class AggregateTests(unittest.TestCase):
     def setUp(self):
-        self.tmp = tempfile.TemporaryDirectory()
-        self.dir = Path(self.tmp.name)
+        temporary = tempfile.TemporaryDirectory(prefix='hill-climb-test-')
+        self.addCleanup(temporary.cleanup)
+        self.run = Path(temporary.name)
+        self.config = {
+            'mode': 'climb',
+            'judges': [{'name': f'J{i}', 'provider': f'provider{i}'} for i in range(3)],
+            'references': ['leader'], 'checks': ['build'],
+        }
+        self.write('run.json', self.config)
+        self.write('rubric.json', ['quality', 'clarity'])
+        self.round(0, 'v0')
 
-    def tearDown(self):
-        self.tmp.cleanup()
+    def write(self, relative, value):
+        path = self.run / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(value), encoding='utf-8')
+
+    def read(self, relative):
+        return json.loads((self.run / relative).read_text(encoding='utf-8'))
+
+    def round(self, index, candidate, incumbent=None, winners=None, score=9.5, labels=None):
+        prefix = f'round-{index}'
+        self.write(f'{prefix}/round.json', {'candidate': candidate, 'incumbent': incumbent})
+        labels = labels or ({'A': 'incumbent', 'B': 'leader', 'C': 'ours'} if incumbent else {'A': 'ours', 'B': 'leader'})
+        self.write(f'{prefix}/labels.json', labels)
+        self.write(f'{prefix}/checks.json', {'candidate': candidate, 'results': {
+            'build': {'passed': True, 'evidence': 'build.log: exit 0'},
+        }})
+        for index_judge in range(3):
+            data = {'judge': f'J{index_judge}', 'items': {label: {'scores': {
+                'quality': score if name == 'ours' else 9.0,
+                'clarity': score if name == 'ours' else 9.0,
+            }} for label, name in labels.items()}}
+            if incumbent:
+                winner = winners[index_judge] if winners else 'ours'
+                label = next((k for k, v in labels.items() if v == winner), 'tie')
+                data['comparison'] = {'winner': label, 'reason': 'Specific observed difference.'}
+            self.write(f'{prefix}/J{index_judge}.json', data)
+
+    def verdict(self, expected, *flags):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = aggregate.main([str(self.run), *flags])
+        self.assertEqual(code, expected, out.getvalue())
+        self.assertIn(f'RESULT: { {0: "PASS", 1: "FAIL", 2: "INVALID", 3: "INCOMPLETE"}[expected]}', out.getvalue())
+        return out.getvalue()
 
     def test_example_passes(self):
-        code, out = run(EXAMPLE, "--target", "9")
-        self.assertEqual(code, 0, out)
-        self.assertIn("RESULT: PASS", out)
-        self.assertIn("| Gemini Pro | not run | not run | 9.3 |", out)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = aggregate.main([str(EXAMPLE), '--target', '9'])
+        self.assertEqual(code, 0, out.getvalue())
+        self.assertIn('RESULT: PASS', out.getvalue())
+        self.assertIn('| Gemini Pro | 6.0 | not run | 9.3 |', out.getvalue())
 
-    def test_shuffled_labels_map_to_real_items(self):
-        write_round(self.dir, 0, {"A": "ours", "B": "ref"},
-                    {"J1": {"ours": {"X": 9.5}, "ref": {"X": 8.0}}, "J2": {"ours": {"X": 9.4}, "ref": {"X": 8.0}}})
-        write_round(self.dir, 1, {"A": "ref", "B": "ours"},
-                    {"J1": {"ours": {"X": 9.6}, "ref": {"X": 8.0}}, "J2": {"ours": {"X": 9.5}, "ref": {"X": 8.0}}})
-        code, out = run(self.dir)
-        self.assertEqual(code, 0, out)
-        self.assertIn("| J1 | 9.5 | 9.6 |", out)
+    def test_complete_baseline_passes(self):
+        self.assertIn('BEST: v0', self.verdict(0))
 
-    def test_below_target_fails(self):
-        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"X": 9.5}}, "J2": {"ours": {"X": 8.9}}})
-        code, out = run(self.dir, "--target", "9")
-        self.assertEqual(code, 1, out)
-        self.assertIn("J2: X = 8.9 < 9.0", out)
+    def test_score_mode_without_pair_passes(self):
+        self.config['mode'] = 'score'
+        self.write('run.json', self.config)
+        self.verdict(0)
 
-    def test_below_best_reference_fails(self):
-        write_round(self.dir, 0, {"A": "ours", "B": "ref"},
-                    {"J1": {"ours": {"X": 9.2}, "ref": {"X": 9.4}}, "J2": {"ours": {"X": 9.3}, "ref": {"X": 9.0}}})
-        code, out = run(self.dir)
-        self.assertEqual(code, 1, out)
-        self.assertIn("below the best reference", out)
+    def test_legacy_and_missing_rubric_are_incomplete(self):
+        for name in ['run.json', 'rubric.json']:
+            with self.subTest(name=name):
+                saved = self.read(name)
+                (self.run / name).unlink()
+                self.verdict(3)
+                self.write(name, saved)
 
-    def test_judge_missing_from_final_round_fails(self):
-        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"X": 9.5}}, "J2": {"ours": {"X": 9.5}}})
-        write_round(self.dir, 1, {"A": "ours"}, {"J1": {"ours": {"X": 9.6}}})
-        code, out = run(self.dir)
-        self.assertEqual(code, 1, out)
-        self.assertIn("J2: not run in the final round", out)
+    def test_only_one_answer_cannot_pass(self):
+        for judge in ['J1', 'J2']:
+            (self.run / f'round-0/{judge}.json').unlink()
+        self.verdict(3)
 
-    def test_advisory_judge_does_not_gate(self):
-        write_round(self.dir, 0, {"A": "ours"},
-                    {"J1": {"ours": {"X": 9.5}}, "J2": {"ours": {"X": 9.3}}, "Jester": {"ours": {"X": 4.0}}})
-        code, out = run(self.dir, "--advisory", "Jester")
-        self.assertEqual(code, 0, out)
-        self.assertIn("Jester (advisory)", out)
+    def test_declaring_a_single_judge_cannot_bypass_panel(self):
+        self.config['judges'] = self.config['judges'][:1]
+        self.write('run.json', self.config)
+        for judge in ['J1', 'J2']:
+            (self.run / f'round-0/{judge}.json').unlink()
+        self.verdict(3)
 
-    def test_plateau_warning(self):
-        for n, score in enumerate([8.0, 8.1, 8.2]):
-            write_round(self.dir, n, {"A": "ours"}, {"J1": {"ours": {"X": score}}, "J2": {"ours": {"X": score}}})
-        code, out = run(self.dir)
-        self.assertEqual(code, 1, out)
-        self.assertIn("WARNING: plateau", out)
+    def test_same_provider_is_degraded(self):
+        for judge in self.config['judges']:
+            judge['provider'] = 'same'
+        self.write('run.json', self.config)
+        self.verdict(3)
 
-    def test_no_reference_warning(self):
-        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"X": 9.5}}, "J2": {"ours": {"X": 9.5}}})
-        code, out = run(self.dir)
-        self.assertEqual(code, 0, out)
-        self.assertIn("WARNING: no references", out)
+    def test_advisory_cannot_manufacture_pass(self):
+        self.verdict(3, '--advisory', 'J2')
 
-    def test_unknown_label_is_a_data_error(self):
-        folder = self.dir / "round-0"
-        folder.mkdir()
-        (folder / "labels.json").write_text('{"A": "ours"}', encoding="utf-8")
-        (folder / "j1.json").write_text('{"judge": "J1", "items": {"Z": {"scores": {"X": 9}}}}', encoding="utf-8")
-        code, out = run(self.dir)
-        self.assertEqual(code, 2, out)
-        self.assertIn("label Z not in labels.json", out)
+    def test_all_judges_omitting_category_is_incomplete(self):
+        for index in range(3):
+            path = f'round-0/J{index}.json'
+            data = self.read(path)
+            del data['items']['A']['scores']['clarity']
+            self.write(path, data)
+        self.verdict(3)
 
-    def test_late_strict_judge_is_not_a_plateau(self):
-        # J1 climbs; J3 joins in the last round and starts lower. Mixing judges would look flat.
-        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"X": 7.0}}})
-        write_round(self.dir, 1, {"A": "ours"}, {"J1": {"ours": {"X": 8.0}}})
-        write_round(self.dir, 2, {"A": "ours"}, {"J1": {"ours": {"X": 9.0}}, "J3": {"ours": {"X": 7.9}}})
-        code, out = run(self.dir)
-        self.assertEqual(code, 1, out)
-        self.assertNotIn("WARNING: plateau", out)
-        self.assertNotIn("REGRESSION", out)
+    def test_missing_reference_score_is_incomplete(self):
+        data = self.read('round-0/J0.json')
+        del data['items']['B']
+        self.write('round-0/J0.json', data)
+        self.verdict(3)
 
-    def test_regression_is_reported_per_judge(self):
-        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"X": 9.0}}, "J2": {"ours": {"X": 8.5}}})
-        write_round(self.dir, 1, {"A": "ours"}, {"J1": {"ours": {"X": 8.4}}, "J2": {"ours": {"X": 8.2}}})
-        code, out = run(self.dir)
-        self.assertEqual(code, 1, out)
-        self.assertIn("REGRESSION: J1 went from 9.0 to 8.4", out)
-        self.assertNotIn("REGRESSION: J2", out)  # a 0.3 drop is noise
+    def test_invalid_score_values_are_rejected(self):
+        original = self.read('round-0/J0.json')
+        for value in [99, 0, -1, math.nan, math.inf, -math.inf, 'NaN', '9.5', True, None, [], {}]:
+            with self.subTest(value=value):
+                data = json.loads(json.dumps(original))
+                data['items']['A']['scores']['quality'] = value
+                self.write('round-0/J0.json', data)
+                self.verdict(2)
 
-    def test_duplicate_judge_is_a_data_error(self):
-        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"X": 9.5}}})
-        (self.dir / "round-0" / "copy.json").write_text(
-            '{"judge": "J1", "items": {"A": {"scores": {"X": 9}}}}', encoding="utf-8")
-        code, out = run(self.dir)
-        self.assertEqual(code, 2, out)
-        self.assertIn("judge 'J1' already has a file", out)
+    def test_unknown_category_is_invalid(self):
+        data = self.read('round-0/J0.json')
+        data['items']['A']['scores']['typo'] = 10
+        self.write('round-0/J0.json', data)
+        self.verdict(2)
 
-    def test_category_not_in_rubric_is_a_data_error(self):
-        (self.dir / "rubric.json").write_text('["Color"]', encoding="utf-8")
-        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"Colour": 9.5}}})
-        code, out = run(self.dir)
-        self.assertEqual(code, 2, out)
-        self.assertIn("categories not in rubric.json: Colour", out)
+    def test_duplicate_judge_and_duplicate_json_keys_are_invalid(self):
+        self.write('round-0/duplicate.json', self.read('round-0/J0.json'))
+        self.verdict(2)
+        (self.run / 'round-0/duplicate.json').unlink()
+        (self.run / 'rubric.json').write_text('{"a": 1, "a": 2}', encoding='utf-8')
+        self.verdict(2)
 
-    def test_category_missing_from_rubric_fails(self):
-        (self.dir / "rubric.json").write_text('["X", "Y"]', encoding="utf-8")
-        write_round(self.dir, 0, {"A": "ours"}, {"J1": {"ours": {"X": 9.5}}, "J2": {"ours": {"X": 9.5, "Y": 9.5}}})
-        code, out = run(self.dir)
-        self.assertEqual(code, 1, out)
-        self.assertIn("J1: no score for 'Y'", out)
+    def test_missing_failed_and_stale_checks_block_pass(self):
+        path = 'round-0/checks.json'
+        data = self.read(path)
+        (self.run / path).unlink()
+        self.verdict(3)
+        data['results']['build']['passed'] = False
+        self.write(path, data)
+        self.verdict(1)
+        data['candidate'] = 'another-snapshot'
+        self.write(path, data)
+        self.verdict(2)
 
-    def test_empty_folder_is_a_data_error(self):
-        code, _ = run(self.dir)
-        self.assertEqual(code, 2)
+    def test_explicit_no_checks_or_references(self):
+        self.config.update(checks=[], references=[])
+        self.write('run.json', self.config)
+        (self.run / 'round-0/checks.json').unlink()
+        self.write('round-0/labels.json', {'A': 'ours'})
+        for index in range(3):
+            path = f'round-0/J{index}.json'
+            data = self.read(path)
+            del data['items']['B']
+            self.write(path, data)
+        self.assertIn('no external references', self.verdict(0))
+
+    def test_winning_candidate_is_retained(self):
+        self.round(1, 'v1', 'v0', ['ours', 'ours', 'incumbent'])
+        self.assertIn('BEST: v1', self.verdict(0))
+
+    def test_losing_or_tied_candidate_cannot_pass_on_high_scores(self):
+        for winners in [['incumbent'] * 3, ['tie'] * 3, ['ours', 'incumbent', 'tie']]:
+            with self.subTest(winners=winners):
+                self.round(1, 'v1', 'v0', winners, score=10)
+                self.assertIn('BEST: v0', self.verdict(1))
+
+    def test_selection_is_independent_of_absolute_target(self):
+        self.round(1, 'v1', 'v0', score=8)
+        out = self.verdict(1)
+        self.assertIn('BEST: v1', out)
+        self.assertIn('KEEP', out)
+
+    def test_rejected_attempt_does_not_become_next_incumbent(self):
+        self.round(1, 'v1', 'v0', ['incumbent'] * 3)
+        self.round(2, 'v2', 'v0')
+        self.assertIn('BEST: v2', self.verdict(0))
+        self.write('round-2/round.json', {'candidate': 'v2', 'incumbent': 'v1'})
+        self.verdict(2)
+
+    def test_incumbent_is_not_an_external_reference(self):
+        self.round(1, 'v1', 'v0')
+        for index in range(3):
+            path = f'round-1/J{index}.json'
+            data = self.read(path)
+            data['items']['A']['scores'] = {'quality': 10, 'clarity': 10}
+            self.write(path, data)
+        self.verdict(0)
+
+    def test_shuffled_labels_do_not_change_selection(self):
+        self.round(1, 'v1', 'v0', labels={'A': 'ours', 'B': 'incumbent', 'C': 'leader'})
+        self.assertIn('BEST: v1', self.verdict(0))
+
+    def test_missing_comparison_is_incomplete(self):
+        self.round(1, 'v1', 'v0')
+        data = self.read('round-1/J0.json')
+        del data['comparison']
+        self.write('round-1/J0.json', data)
+        self.assertIn('BEST: v0', self.verdict(3))
+
+    def test_reference_cannot_win_pairwise_comparison(self):
+        self.round(1, 'v1', 'v0')
+        data = self.read('round-1/J0.json')
+        data['comparison']['winner'] = 'B'
+        self.write('round-1/J0.json', data)
+        self.verdict(2)
+
+    def test_failed_check_prevents_promotion(self):
+        self.round(1, 'v1', 'v0')
+        data = self.read('round-1/checks.json')
+        data['results']['build']['passed'] = False
+        self.write('round-1/checks.json', data)
+        self.assertIn('BEST: v0', self.verdict(1))
+
+    def test_invalid_cli_numbers(self):
+        for flag, value in [('--target', 'nan'), ('--target', '11'), ('--noise', '-1'), ('--tolerance', 'inf')]:
+            with self.subTest(flag=flag, value=value):
+                self.verdict(2, flag, value)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
