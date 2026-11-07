@@ -8,13 +8,12 @@ Based on Theo Browne's video **[Agents Sucked At UI (Until Today)](https://youtu
 
 ## How it works
 
-```mermaid
-flowchart LR
-    A[Pick the goal] --> B[Judges score it]
-    B --> C{9/10 from all?}
-    C -- no --> D[Improve it]
-    D --> B
-    C -- yes --> E[Done]
+```text
+Pick the goal --> Judges score it --> 9/10 from all? --yes--> Done
+                         ^                   |
+                         |                   | no
+                         |                   v
+                         +------------- Improve it
 ```
 
 1. You choose what to judge, what "good" means and 1–3 best-in-class examples to compare against.

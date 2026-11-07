@@ -16,6 +16,7 @@ Run folders from earlier versions need a new run: `hill-climb` answers now use `
 - A newer retained version makes an earlier `blind-climb` final check obsolete instead of `INVALID`. The next one goes in `final-check-2/`.
 - `aggregate.py` regression and plateau warnings skip the rounds a judge did not run in, as the docs already said.
 - Round 0 reports `BASELINE` in `aggregate.py`, matching `tally.py`.
+- The README diagram is plain text instead of Mermaid, so it looks the same in any viewer, not only on GitHub.
 
 ### Fixed
 
