@@ -68,6 +68,6 @@ Not affiliated with Theo Browne or T3.
 
 ## License
 
-Public domain under [The Unlicense](LICENSE), except `skills/council/`, which keeps Theo's MIT license.
+[MIT](LICENSE), Copyright (c) 2026 Axeeh. `skills/council/` keeps its own MIT license, Copyright (c) 2026 Theo Browne.
 
 If you are an agent installing or working on these skills, read [AGENTS.md](AGENTS.md) first.

@@ -4,8 +4,8 @@ Guidance for coding agents working with this repository. People should start wit
 
 This repo publishes three [Agent Skills](https://agentskills.io/specification):
 
-- `skills/hill-climb/`: score an artifact with a blind multi-provider jury and improve it until it passes. Original work, public domain under the [Unlicense](LICENSE).
-- `skills/blind-climb/`: the score-free version. Blind reviewers pick between two versions and list what's wrong; the preferred one survives and gets fixed. Original work, public domain under the Unlicense.
+- `skills/hill-climb/`: score an artifact with a blind multi-provider jury and improve it until it passes. Original work, MIT license (see [LICENSE](LICENSE)), Copyright (c) 2026 Axeeh.
+- `skills/blind-climb/`: the score-free version. Blind reviewers pick between two versions and list what's wrong; the preferred one survives and gets fixed. Original work, MIT license, Copyright (c) 2026 Axeeh.
 - `skills/council/`: the jury that `hill-climb` and `blind-climb` call. It is a **verbatim** copy from [t3dotgg/tstack](https://github.com/t3dotgg/tstack) at commit `1085050f3baed1ac724caa4a8166145fb2ac88af`, MIT, Copyright (c) 2026 Theo Browne.
 
 ## If a user asked you to install these skills
@@ -53,7 +53,7 @@ CONTRIBUTING.md                       contribution rules and PR checks
 - **Quote exactly.** Numbers and quotes attributed to the video must match what is said in it. If you can't verify one, remove it.
 - **The scripts use only the standard library** and support Python 3.9+. Their exit codes stay stable (the tables are in each skill's `references/run-format.md`). Any change to an output format must also update the tests and `references/run-format.md` (and, for `aggregate.py`, `references/scorecard-template.md`).
 - **No scores in `blind-climb`.** Its brief, its script and its PR table never ask for or show a number; that is the point of the skill.
-- **No personal names or copyright lines** for `hill-climb` and `blind-climb`: they are public domain under the Unlicense. Theo's copyright line in `skills/council/LICENSE` stays, because his MIT license requires it.
+- **One copyright line per license.** `hill-climb` and `blind-climb` are MIT under the single notice in [LICENSE](LICENSE) ("Copyright (c) 2026 Axeeh"); don't add personal copyright lines to files. Theo's copyright line in `skills/council/LICENSE` stays, because his MIT license requires it.
 - **English everywhere** in this repo.
 - **Versioning:** semver. A release bumps `metadata.version` in both original skills' `SKILL.md`, both `version` fields in `.claude-plugin/marketplace.json`, and adds a `CHANGELOG.md` entry.
 

@@ -6,7 +6,7 @@ Open a pull request against `main`. [AGENTS.md](AGENTS.md) has the repository la
 - The scripts use only the Python standard library and support 3.9+.
 - `blind-climb` never asks for or shows a score.
 
-Contributions to `hill-climb`, `blind-climb`, `tests/` and the docs are released into the public domain under [The Unlicense](LICENSE), with no personal copyright lines.
+Contributions to `hill-climb`, `blind-climb`, `tests/` and the docs are released under the [MIT license](LICENSE) of this repository, with no extra copyright lines.
 
 CI runs these on every pull request:
 

@@ -1,11 +1,11 @@
 ---
 name: blind-climb
 description: Improve any artifact round after round with a blind, multi-provider review panel (the council skill) that never sees a score, a target or a loop. Each round fresh reviewers get two unlabelled versions in random order, pick the one they would ship, and list what is wrong with each by severity; the better version survives and the agreed findings are fixed. Stops when no reviewer finds anything major and all would ship it, on a plateau or on budget, then checks the final version blindly against the original. Works for UIs and websites, emails, social posts, proposals, code, prompts and skills, business plans and other writing. Use when the user says "blind climb", "blind refine", "refine this", "improve it without scores", "keep improving until the reviewers have nothing left", "blind review loop", "make it better, no grades" or worries that numbers bias the reviewers. Not for a scorecard or a number to beat (use hill-climb), or for a one-off second opinion (use council).
-license: Unlicense
+license: MIT
 compatibility: Needs the council skill (bundled in this repo), an agent that can run subagents on models from other providers (T3 Code delegate_task or an equivalent harness), and Python 3.9+ for scripts/tally.py.
 metadata:
   author: Axeeh
-  version: "2.0.0"
+  version: "2.0.1"
   source: https://github.com/Axeeh/hill-climb
 ---
 

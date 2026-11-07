@@ -1,11 +1,11 @@
 ---
 name: hill-climb
 description: Score any artifact against a rubric with a blind, multi-provider jury (programmatic checks first, then the council skill as judges) and, when asked, keep improving it round after round until every judge rates every category at or above a target and above best-in-class references. Works for UIs and websites, landing pages, emails, social posts, proposals, code, prompts and skills, business plans and other writing. Use when the user says "hill climb", "score this", "rate this out of 10", "get this to a 9/10", "keep improving until the judges agree", "make it better than [competitor]", "scorecard" or "build an eval for this". Not for a one-off second opinion with no rubric or loop (use council directly), or for improving something without any score at all (use blind-climb).
-license: Unlicense
+license: MIT
 compatibility: Needs the council skill (bundled in this repo), an agent that can run subagents on models from other providers (T3 Code delegate_task or an equivalent harness), and Python 3.9+ for scripts/aggregate.py.
 metadata:
   author: Axeeh
-  version: "2.0.0"
+  version: "2.0.1"
   source: https://github.com/Axeeh/hill-climb
 ---
 
