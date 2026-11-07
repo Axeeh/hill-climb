@@ -22,6 +22,7 @@ Run folders from earlier versions need a new run: `hill-climb` answers now use `
 - `aggregate.py` no longer dead-ends when round 0 fails a required check: round 0 is the starting point, and a passing candidate can replace it.
 - `--advisory` no longer turns a run with several rounds into `INVALID`.
 - Corrected two details attributed to the video: the 52–78% is total tokens, and the first scores were Opus 6.0 and Sol 6.5.
+- Checked every claim attributed to the video against its transcript. The UI result shown is 9.5 or higher in every category from every judge, not 10/10, and two paraphrases are no longer in quotation marks.
 
 ### Added
 
@@ -31,6 +32,7 @@ Run folders from earlier versions need a new run: `hill-climb` answers now use `
 ### Removed
 
 - Rules duplicated between `CONTRIBUTING.md` and `AGENTS.md`, and exit codes repeated outside `run-format.md` and the script headers.
+- Decision rules repeated in both `run-format.md` files: they now define only the data, and the rules live once in `SKILL.md`. The paragraphs on staging files and checking delivery are shorter in both skills.
 
 ## [1.2.0] - 2026-11-06
 

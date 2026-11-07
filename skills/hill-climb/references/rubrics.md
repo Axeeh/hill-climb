@@ -8,7 +8,7 @@ House rules from the user's `AGENTS.md` or `CLAUDE.md` (accessibility baseline, 
 
 ## 1. UI: site, app, dashboard
 
-The preset Theo climbed. Show judges screenshots at **390px and 1440px**, light and dark if both exist, and the same screens for every item.
+Based on the UI categories in Theo's video (hierarchy, typography, color and contrast, iconography). Show judges screenshots at **390px and 1440px**, light and dark if both exist, and the same screens for every item.
 
 **Gates**: build passes, no console errors, axe with no serious issues, contrast, tap targets, no horizontal scroll, Lighthouse accessibility ≥ 95.
 
