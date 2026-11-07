@@ -31,7 +31,7 @@ Write `scorecard.md` from this skeleton, in the user's language. Paste the table
 |---|---|---|---|---|
 | Claude Opus | 6.0 | 7.5 | 9.0 | |
 | GPT Sol | 6.5 | 8.0 | 9.2 | |
-| Gemini Argon | not run | not run | 9.0 | |
+| Gemini Pro | not run | not run | 9.0 | |
 
 ## Categories, final round
 

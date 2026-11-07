@@ -5,7 +5,7 @@ Guidance for coding agents working with this repository. People should start wit
 This repo publishes three [Agent Skills](https://agentskills.io/specification):
 
 - `skills/hill-climb/`: score an artifact with a blind multi-provider jury and improve it until it passes. Original work, public domain under the [Unlicense](LICENSE).
-- `skills/blind-climb/`: the score-free sibling. Blind reviewers pick between two versions and list what's wrong; the preferred one survives and gets fixed. Original work, public domain under the Unlicense.
+- `skills/blind-climb/`: the score-free version. Blind reviewers pick between two versions and list what's wrong; the preferred one survives and gets fixed. Original work, public domain under the Unlicense.
 - `skills/council/`: the jury that `hill-climb` and `blind-climb` call. It is a **verbatim** copy from [t3dotgg/tstack](https://github.com/t3dotgg/tstack) at commit `1085050f3baed1ac724caa4a8166145fb2ac88af`, MIT, Copyright (c) 2026 Theo Browne.
 
 ## If a user asked you to install these skills
@@ -37,7 +37,7 @@ skills/blind-climb/references/        review-brief.md, run-format.md
 skills/blind-climb/scripts/tally.py
 skills/blind-climb/agents/openai.yaml Codex UI metadata
 skills/council/                       vendored from tstack; never edit
-examples/landing-page/                sample run, also used by the tests
+examples/landing-page/                synthetic sample run, also used by the tests
 tests/                                standard-library unittest for both scripts
 CONTRIBUTING.md                       contribution rules and PR checks
 .claude-plugin/marketplace.json       plugin marketplace manifest
@@ -51,7 +51,7 @@ CONTRIBUTING.md                       contribution rules and PR checks
 - **Credit Theo.** Keep the video link and the tstack credit in `SKILL.md` and `README.md`. A new idea from Theo gets credited the same way.
 - **Keep the README short.** It is for people deciding whether to install: what it does, a simple diagram, install, a few examples, contributing, credits. Details go in `SKILL.md`, `references/` or this file.
 - **Quote exactly.** Numbers and quotes attributed to the video must match what is said in it. If you can't verify one, remove it.
-- **The scripts use only the standard library** and support Python 3.9+. Their exit codes stay stable: `aggregate.py` 0 PASS, 1 FAIL, 2 INVALID, 3 INCOMPLETE; `tally.py` 0 DONE, 1 CONTINUE, 2 INVALID, 3 PLATEAU, 4 INCOMPLETE, 5 REVIEW_REQUIRED. Any change to an output format must also update the tests and `references/run-format.md` (and, for `aggregate.py`, `references/scorecard-template.md`).
+- **The scripts use only the standard library** and support Python 3.9+. Their exit codes stay stable (the tables are in each skill's `references/run-format.md`). Any change to an output format must also update the tests and `references/run-format.md` (and, for `aggregate.py`, `references/scorecard-template.md`).
 - **No scores in `blind-climb`.** Its brief, its script and its PR table never ask for or show a number; that is the point of the skill.
 - **No personal names or copyright lines** for `hill-climb` and `blind-climb`: they are public domain under the Unlicense. Theo's copyright line in `skills/council/LICENSE` stays, because his MIT license requires it.
 - **English everywhere** in this repo.

@@ -1,6 +1,6 @@
 # hill-climb
 
-An agent skill that gets a panel of AI judges from three different providers to score your work, then keeps improving it until every judge gives it at least 9/10.
+An agent skill that gets a panel of AI judges from three different providers to score your work, then improves it round after round, aiming for at least 9/10 from every judge. It stops when it gets there, when progress stalls or when the budget runs out.
 
 It works on anything a judge can look at: a website, an email, a social post, a proposal, code, a prompt, a business plan. It runs in any agent that supports [Agent Skills](https://agentskills.io), and works best in [T3 Code](https://github.com/pingdotgg/t3code), which can reach models from all three providers.
 
@@ -49,10 +49,10 @@ Ask your agent things like:
 ```text
 Score our pricing page against Linear's and Stripe's.
 Get this cold email to 9/10 from every judge. Max 5 rounds.
-Blind climb this proposal with blind reviewers, no scores.
+Blind climb this proposal, no scores.
 ```
 
-**Score** gives you one round of grades and changes nothing. **Climb** keeps improving until it passes, on a copy or a branch, and asks for your OK before it starts.
+**Score** gives you one round of grades and changes nothing. **Climb** keeps improving until it passes or stops, on a copy or a branch, and asks for your OK before it starts.
 
 Climbing uses a lot of tokens, so set a maximum number of rounds.
 

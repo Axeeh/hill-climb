@@ -17,7 +17,7 @@ Create `run.json` before dispatching reviewers. Replace these example names with
 }
 ```
 
-Every declared reviewer is required, even if no answer arrives. At least three distinct providers are required for promotion or DONE. A degraded panel can report provisional findings but stays INCOMPLETE. `--advisory NAME` marks a required reviewer as advisory without reducing the required panel or majority denominator. A typo in this option is INVALID.
+Every declared reviewer is required, even if no answer arrives. At least three distinct providers are required for promotion or DONE. A degraded panel can report provisional findings but stays INCOMPLETE. `--advisory NAME` marks a reviewer's answer in the latest assessment (the last round, or a final check still valid for the retained version) as unreliable, without reducing the panel or the majority needed. Earlier decisions stand. A typo in this option is INVALID.
 
 `checks: []` explicitly declares that no programmatic check applies. Never delete a required check or reviewer to obtain success. Duplicate identities or check names are INVALID.
 
@@ -91,7 +91,7 @@ After `REVIEW: READY`, a plateau or the budget limit, dispatch fresh reviewers o
 {"versions": {"original": "snapshots/v0", "final": "snapshots/v2"}}
 ```
 
-Include shuffled `labels.json` (`{"X":"final","Y":"original"}` or reverse), the full panel's raw answers and checks for both snapshots. A final check against an older retained version is INVALID. If no version was changed, both roles may point to the original snapshot: still collect the full readiness assessment and checks, but make no claim of improvement and do not require a preference between identical copies.
+Include shuffled `labels.json` (`{"X":"final","Y":"original"}` or reverse), the full panel's raw answers and checks for both snapshots. A final check naming a snapshot that was never retained, or a different original, is INVALID. If a newer version is kept after a final check, that check no longer counts: leave its folder untouched and run a new one in `final-check-2/`, then `final-check-3/`. The highest number is the one that counts. If no version was changed, both roles may point to the original snapshot: still collect the full readiness assessment and checks, but make no claim of improvement and do not require a preference between identical copies.
 
 `REVIEW: READY` is separate from DONE. DONE requires a complete panel, passing retained/final checks, every reviewer ready to ship the retained/final version, no major findings in either assessment, and a strict majority preferring final over original (except the unchanged-original case). A tied/lost final comparison reports REVIEW_REQUIRED for the user's decision, never DONE. A completed final check with unresolved major findings remains CONTINUE or PLATEAU.
 
@@ -116,4 +116,4 @@ INCOMPLETE takes precedence over success, plateau or human escalation. A clean r
 
 Read KEEP/BEST separately from the overall result: a complete round may legitimately retain a candidate while the run remains INCOMPLETE because its final check is still missing. That missing final check does not undo a valid local selection.
 
-Historical logs without the new metadata remain INCOMPLETE. Only reconstruct metadata from recorded evidence; otherwise keep the old log and start a new run. A skill update must not rewrite historical audits.
+Runs from older versions of this format report INCOMPLETE. Start a new run instead of editing their files.

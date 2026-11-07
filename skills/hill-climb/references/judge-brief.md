@@ -4,14 +4,14 @@ Pass this to the `council` skill as the request for every delegate, filled in an
 
 Rules for the parent agent while filling it in:
 
-- MUST: no target score, no threshold, no word like "goal", "iteration", "round", "loop" or "improve".
+- MUST: no target score, no threshold, no word like "goal", "iteration", "round", "loop", "previous" or "improve".
 - MUST: items labelled A, B, C… in a **new random order every round**. Write the label → item mapping to `round-N/labels.json` (`"ours"` for our item, which `aggregate.py` reads) and to `run.md`, never into the brief.
 - MUST: no hint about which item is ours. Strip our branding only if the references keep theirs. If branding is part of the judgement (a logo, a brand voice), leave every item's branding in and accept the bias.
 - MUST: a new delegate every round, with no earlier scores or findings.
 - MUST: the items live in a staging folder outside the project and the run folder, with file names that are only labels (`A-390.png`, `B.md`). Never point a judge at the run folder, at `labels.json` or at a path that names a product.
-- MUST: after the Climb baseline, include the candidate and the best retained snapshot, plus the external references. Privately map them as `ours` and `incumbent`, with snapshot IDs in `round.json`. In the brief identify only the two labels to compare (for example A and C), never which is newer, ours, or the previous best. Omit the comparison paragraph and JSON member for baseline/Score rounds.
+- MUST: after the Climb baseline, include the candidate and the best retained snapshot among the items. Privately map them as `ours` and `incumbent`, with snapshot IDs in `round.json`. The brief stays the same in every round and never points at those two items: every judge ranks all the items, and the script reads the preference from the ranking.
 - MUST: `judge` in the answer must match the model name assigned in `run.json`. Supply that reviewer's own name when dispatching; the artifact context, rubric and comparison instructions remain identical for all members.
-- Give the same context to everyone: the audience, the goal of the artifact, the medium (mobile Instagram feed, desktop app, client inbox).
+- Give the same context to everyone: the audience, what the artifact must achieve, the medium (mobile Instagram feed, desktop app, client inbox).
 
 ---
 
@@ -37,11 +37,11 @@ Score every item in every category from 1.0 to 10.0, with one decimal. Use the a
 
 ### What to return
 
-For every score under 9.0, give concrete evidence: the exact element, line, passage or screen region, and why. Do not cite anything you cannot see. If you are unsure, say so instead of guessing.
+For every score below 10, give concrete evidence: the exact element, line, passage or screen region, and why. Do not cite anything you cannot see. If you are unsure, say so instead of guessing.
 
 Then list the **3 changes with the most impact** for each item, most important first.
 
-{For a comparison round only: Between **{label X}** and **{label Y}**, which version would you ship for this audience and task? Choose one of those labels, or `tie` if neither has a justified advantage. Give concrete evidence for your choice. Judge the actual task outcome; do not infer chronology or authorship. The other items are external references, not eligible winners of this two-version comparison.}
+Finally, rank all the items from the one you would ship first to the one you would ship last for this audience and task, and give concrete evidence for the order. Put items in the same group only if neither has a justified advantage. Judge the actual task outcome; do not guess who made an item or when.
 
 End your answer with exactly one JSON block in this shape, and nothing after it:
 
@@ -51,14 +51,14 @@ End your answer with exactly one JSON block in this shape, and nothing after it:
   "items": {
     "A": {
       "scores": {"<category>": 7.5, "<category>": 8.0},
-      "evidence": {"<category>": "why it is not a 9 or above, with location"},
+      "evidence": {"<category>": "what keeps it from a 10, with location"},
       "top_fixes": ["...", "...", "..."]
     },
     "B": { "scores": {}, "evidence": {}, "top_fixes": [] }
   },
-  "comparison": {"winner": "<one of the two comparison labels, or tie>", "reason": "Specific evidence for the preference or tie"}
+  "ranking": {"order": [["B"], ["A", "C"]], "reason": "Specific evidence for the order"}
 }
 ```
 
 Category names in `scores` must match the rubric exactly.
-Score every listed item in every category. Return scores as JSON numbers from 1.0 to 10.0, never numeric strings. Include `comparison` only when a comparison pair was supplied.
+Score every listed item in every category. Return scores as JSON numbers from 1.0 to 10.0, never numeric strings. `order` lists every item once, best first; a group holds items you consider equal.
