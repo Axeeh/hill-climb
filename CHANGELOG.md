@@ -4,6 +4,12 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [2.0.1] - 2026-11-07
+
+### Changed
+
+- `hill-climb` and `blind-climb` are now under the MIT license (Copyright (c) 2026 Axeeh) instead of the Unlicense, so the whole repo uses one license family and the license holds in countries where you cannot give up copyright entirely. `skills/council/` keeps its own MIT license from Theo Browne.
+
 ## [2.0.0] - 2026-11-06
 
 Run folders from earlier versions need a new run: `hill-climb` answers now use `ranking` instead of `comparison`.
