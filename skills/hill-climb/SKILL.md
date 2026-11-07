@@ -5,15 +5,15 @@ license: Unlicense
 compatibility: Needs the council skill (bundled in this repo), an agent that can run subagents on models from other providers (T3 Code delegate_task or an equivalent harness), and Python 3.9+ for scripts/aggregate.py.
 metadata:
   author: Axeeh
-  version: "1.2.0"
+  version: "2.0.0"
   source: https://github.com/Axeeh/hill-climb
 ---
 
 # Hill climb
 
-Method from Theo Browne's video "Agents Sucked At UI (Until Today)" (https://youtu.be/xq0eB8vxeqk, 2026-11-03). An agent improves anything you can score, as long as the score is honest. Theo took T3 Code's UI from 6/10 to 10/10 from every judge. With the same approach he cut the tokens in its tool descriptions by 52–78% while keeping a perfect eval score. This skill turns his loop into a procedure for any field.
+Method from Theo Browne's video "Agents Sucked At UI (Until Today)" (https://youtu.be/xq0eB8vxeqk, 2026-11-03). An agent improves anything you can score, as long as the score is honest. Theo took T3 Code's UI from about 6/10 to 9.5 or higher in every category from every judge. The same approach shrank its tool descriptions, cutting total tokens by 52–78% while keeping a perfect eval score. This skill turns his loop into a procedure for any field.
 
-**The idea in one line:** turn the goal into a number, let blind judges produce it, fix what they agree on, repeat until it passes, and keep the best version at every step.
+In short: turn the goal into a number, let blind judges produce it, fix what they agree on, repeat until it passes, and keep the best version at every step.
 
 ## Two modes
 
@@ -29,7 +29,7 @@ Write these down in the run log (Step 7). Before a Climb, show the user a 5-line
 1. **Artifact**: exactly what is scored and how judges will see it (screenshots at mobile and desktop width, the text, the diff, the PDF).
 2. **Programmatic checks first.** Anything a program can measure is a program, not an opinion: build, tests, Lighthouse, axe, contrast ratios, word count, file size, token count, an eval set of real failure cases. Theo's rule: "if you can take a problem you have and turn it into a program that gives a score, your agents are going to make that score go up." Programmatic checks are **gates**: a failure blocks a pass whatever the judges say. If the whole goal is measurable, skip the jury and climb the program.
 3. **Rubric**: 4–7 categories, each with a one-line description of what a 6, an 8 and a 10 look like. Start from [references/rubrics.md](references/rubrics.md) and adapt it. Never let judges invent their own categories. Write the exact category names to mandatory `rubric.json`. Before judging, also write mandatory `run.json`: mode, expected judges and their providers, external reference names, and required programmatic checks. See [references/run-format.md](references/run-format.md) for the schemas. Never infer required judges or categories from the answers that happen to arrive.
-4. **References**: 1–3 best-in-class examples of the same kind (a competitor's product, the best email the user ever sent, the category leader). **This is the most important lever in the method.** Judged alone, T3 Code's UI went "from 6 to 9"; next to Claude Code and Codex the same version scored 7.4. With no reference the score inflates. If no reference exists, say that the scores are absolute and trust them less.
+4. **References**: 1–3 best-in-class examples of the same kind (a competitor's product, the best email the user ever sent, the category leader). Don't skip them. Judged alone, T3 Code's UI went from 6 to 9; next to Claude Code and Codex the same version scored 7.4. With no reference the score inflates. If no reference exists, say that the scores are absolute and trust them less.
 5. **Target**: by default **≥ 9.0 in every category from every gating judge, and ≥ the best reference in every category**. The user may set another bar.
 6. **Budget**: maximum rounds (default 5 for a Climb) and a rough cost limit. In the video, going from 9 to 9.5 took 10 extra rounds, so say this when the target is above 9.
 7. **Guardrails**: what must not get worse (brand identity, real content, prices, legal text, accessibility, the agreed scope). Fight scope creep, because judges keep asking for more.
@@ -45,21 +45,23 @@ Hill-climb adds a frame around council. Where the two differ, these rules win du
 - **The delegates' request is the judge brief** ([references/judge-brief.md](references/judge-brief.md)), identical for each member, not a free-form review request.
 - **Keep the raw answers.** Besides council's summary, save each delegate's JSON block untouched as `round-N/<judge>.json`. The score comes from the script in Step 4, never from the summary.
 - **Gated order to save cost and time**: establish the baseline with the full council. Later candidates may be screened by the fastest member before adding the others. Partial rounds are `INCOMPLETE`: they may inform fixes, but cannot promote a candidate or produce PASS. Every declared member must judge the same candidate, incumbent and references before promotion or PASS.
-- **Advisory members**: a member that cites evidence that isn't there (wrong line numbers, a passage that doesn't exist, a finding already fixed) becomes advisory. Log its findings and mark it with `--advisory` in Step 4. The result remains `INCOMPLETE` while a required judge is advisory; excluding its score must never turn a failed panel into PASS.
+- **Advisory members**: a member that cites evidence that isn't there (wrong line numbers, a passage that doesn't exist, a finding already fixed) becomes advisory. Log its findings, mark it with `--advisory` in Step 4 and collect a fresh review of the same round from that member. The flag applies to the latest round only, and the result stays `INCOMPLETE` until the member gives a valid review.
 - If council can't reach three providers, the run is degraded: judges from one provider share the same blind spots. Say so in the scorecard.
 
 ## Step 3: what council receives (blind, fresh, read-only)
 
-Fill in [references/judge-brief.md](references/judge-brief.md) and pass it to council as the delegates' brief. These rules matter more than the wording:
+Fill in [references/judge-brief.md](references/judge-brief.md) and pass it to council as the delegates' brief, following these rules:
 
-- **Blind to the target.** Never tell a judge the threshold, the goal or that a loop is running. Theo suspects that writing "I want 9.5" pushed the scores.
+- **Blind to the target.** Never tell a judge the threshold, the goal or that a loop is running. Theo suspects that just saying he wanted a 9.5 influenced the scores.
 - **Blind to authorship.** Label the items A, B, C, shuffle their order every round, and don't say which one is ours.
-- **Blind files, too.** Copy every item into a new staging folder **outside the project and the run folder** (the system temp folder), named only by label: `A-390.png`, `B-1440.png`, `C.md`. File names, folder names and metadata must not reveal which item is ours or which product a reference is. Give the judges only that folder and tell them to open nothing else. The run folder holds `labels.json` and earlier scores, so a judge that reads it is no longer blind. For code that only exists in the project, give a diff or a copied excerpt rather than a path into the repo.
+- **Blind files, too.** Copy every item into a new staging folder outside the project and the run folder (the system temp folder), named only by label: `A-390.png`, `B.md`. The run folder holds `labels.json` and earlier scores, so a judge that reads it is no longer blind. For code, give a diff or a copied excerpt, not a path into the repo.
+- **Check that every judge can see the items.** Delivery can fail silently: a file reader may turn a PNG into text, or an agent may not reach the temp folder. Before the round, send each member a throwaway delegate with one test image and ask what it shows. In T3 Code, if paths fail, send native attachments with anonymous names (`t3_attachment_prepare_upload`, then `t3_thread_send_attachments`), at most 8 per message, with the brief in the last batch.
 - **Fresh context every round**: a new delegate each round, never a follow-up in the same thread, and no earlier scores.
 - **Re-score the references every round, in the same call.** Reference scores drift too: Claude Code went from 8.3 to 9.1 with identical screenshots. The gap to the reference is the stable signal, not the raw number.
-- **Compare with the best retained snapshot.** Round 0 scores the starting version and the external references. Every later Climb round includes both the candidate and the best retained version, freshly anonymized alongside the external references. Identify just the two labels to compare; never reveal which is newer or ours. Ask which version the reviewer would ship (`winner` label or `tie`) and why, in addition to the existing rubric scores. Keep the private label mapping as `ours` and `incumbent`; `incumbent` is never an external reference. Use immutable snapshot IDs in `round.json` so the aggregator verifies that the comparison uses the best retained version, including after rejected attempts.
+- **Put the best retained version next to the candidate.** After round 0, the items are the candidate (`ours`), the best retained snapshot (`incumbent`) and the references, all freshly anonymized. Every judge ranks all of them, and the script reads which of the two it preferred. The brief never says that two items are versions of each other.
 - **Read-only**: judges look and score, and the parent agent makes every change.
-- Ask for a score from 1 to 10 with one decimal per item and category, the evidence for every point under 9, and the 3 fixes with the most impact. The output is the JSON block in the brief.
+
+The brief asks for a 1–10 score per item and category, evidence for every score below 10, a ranking of all items and the 3 fixes with the most impact, in one JSON block.
 
 ## Step 4: aggregate and decide
 
@@ -73,16 +75,16 @@ It prints the blind votes, KEEP/REJECT selection, best retained snapshot, score 
 
 - **Noise**: the same input to the same model gives different scores. Treat a difference under 0.5 as noise. A 9+ from several providers at once is meaningful; a 9 from a single judge is not.
 - **The gate is the strictest gating judge**, not the average.
-- **Selection and target are separate.** A candidate replaces the incumbent only with a strict majority of the entire declared panel in the blind comparison and all required checks passing. A tie or no majority retains the incumbent. Selection does not require reaching the target yet. PASS additionally requires every declared judge's score in every category to reach the target and match the best external reference. A rejected candidate cannot PASS even if its absolute scores reach the target.
-- **Missing is not passing.** Missing manifests, judges, categories, reference scores, comparisons or required checks yield `INCOMPLETE` (exit 3). Malformed data, duplicate keys/judges, unexpected names, non-numeric, non-finite or out-of-range votes yield `INVALID` (exit 2). A complete evaluation that misses a target, loses the comparison or fails a required check yields `FAIL` (exit 1). Only `PASS` exits 0. Fewer than three distinct providers is degraded and cannot PASS. Old logs without the required manifests remain INCOMPLETE; never invent missing data to migrate them.
+- **Selection and target are separate.** Round 0 is the starting point, so it stays retained even if it fails a check. A candidate replaces the incumbent only with a strict majority of the entire declared panel in the blind ranking and all required checks passing. A tie or no majority retains the incumbent. Selection does not require reaching the target yet. PASS additionally requires every declared judge's score in every category to reach the target and match the best external reference. A rejected candidate cannot PASS even if its absolute scores reach the target.
+- **Results.** `PASS`: a retained version reached the target with the full panel and all checks. `FAIL`: the evaluation is complete, but it misses the target, loses the ranking or fails a check. `INCOMPLETE`: something required is missing, including a third provider. `INVALID`: the data is malformed. Exit codes are in [references/run-format.md](references/run-format.md).
 - **Each judge is compared with itself.** Regressions and plateaus are computed per judge, only across rounds that judge ran in, so a stricter judge joining late in the gated order doesn't look like a drop.
-- **Stop** on PASS, on budget, or on a **plateau**: two rounds in a row where no gating judge's minimum rises by at least 0.3. On a plateau, stop and report the blocking category instead of burning more rounds.
+- **Stop** on PASS, on budget, or on a **plateau**: two rounds in a row where no gating judge's minimum rises by at least 0.3. On a plateau, stop and report the blocking category.
 
 ## Step 5: fix (Climb only)
 
 1. **Choose what to fix**: first anything two or more judges flag, then the lowest category. A fix only one judge wants waits unless it is clearly right. Reject anything that breaks a guardrail or expands scope, and note why.
 2. Apply the fixes, then run the programmatic checks again (build, tests, render). For anything visual, look at it yourself after every change, at mobile width first.
-3. **Ratchet**: only a `KEEP` decision promotes the candidate; otherwise restore the snapshot reported as `BEST` before trying different fixes. `REGRESSION` remains a diagnostic about historical scores, not a competing selection rule: the direct blind comparison decides preference, and required checks protect correctness. Keep immutable numbered copies or scoped commits for retained versions, and record rejected candidate IDs too. Never overwrite a judged snapshot or silently compare against the last attempt instead of the best version.
+3. **Ratchet**: only a `KEEP` decision promotes the candidate; otherwise restore the snapshot reported as `BEST` before trying different fixes. `REGRESSION` remains a diagnostic about historical scores, not a competing selection rule: the blind ranking decides preference, and required checks protect correctness. Keep immutable numbered copies or scoped commits for retained versions, and record rejected candidate IDs too. Never overwrite a judged snapshot or silently compare against the last attempt instead of the best version.
 4. Start a new round from Step 3: a new council run, with new delegates.
 
 ## Step 6: human checkpoints
@@ -90,7 +92,7 @@ It prints the blind votes, KEEP/REJECT selection, best retained snapshot, score 
 - After each improving round, show the user **before and after side by side, with the changes annotated** (arrows or notes on what changed and why). Theo couldn't see the difference until he asked for annotated diagrams.
 - The user's taste beats the jury. If they say something like "too grey, bring the colour back", add it as a guardrail or a rubric line and keep climbing. Over-optimising for judges makes things bland.
 - **After a PASS**, offer to raise the bar (9 → 9.5 → 10) **on a separate branch or copy**, so the version that passed stays shippable.
-- **Two-phase climb** for "better and smaller or cheaper": first reach a perfect quality score and lock it with a commit or copy. Then optimise the second goal (length, tokens, cost, load time) while the quality score must stay perfect. Example: "make it a third of the size and still score 100%".
+- **Two-phase climb** for "better and smaller or cheaper": first reach a perfect quality score and lock it with a commit or copy. Then optimise the second goal (length, tokens, cost, load time) while the quality score must stay perfect. Theo's example: a third of the size, and still a perfect eval score.
 
 ## Step 7: the run log and the scorecard
 
@@ -100,11 +102,11 @@ It prints the blind votes, KEEP/REJECT selection, best retained snapshot, score 
 
 ## Gotchas
 
-- Judges start from different baselines (Opus 6.0 vs Sol 7.0 on the same screen). Compare each judge with itself across rounds, never across judges.
+- Judges start from different baselines (Opus 6.0 vs Sol 6.5 on the same screen). Compare each judge with itself across rounds, never across judges.
 - A judge that ran out of usage is `not run` for that round, not a pass.
 - When the jury converges on blandness (too grey, too safe, too generic), that is the cue for a human checkpoint, not one more round.
 - Climbing costs real money: Theo spent about $250 on the runs he showed. Report the rounds and an estimated cost before you raise the bar.
 
-## Make it yours
+## Personal settings
 
 Put personal settings in the user's `CLAUDE.md` or `AGENTS.md`, not in this file, so the skill can be updated without losing them: council members, the default target, where run logs go, house rules that act as gates (brand palette, tone, price list). A rubric that worked well belongs in [references/rubrics.md](references/rubrics.md) as a new preset.

@@ -4,6 +4,36 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] - 2026-11-06
+
+Run folders from earlier versions need a new run: `hill-climb` answers now use `ranking` instead of `comparison`.
+
+### Changed
+
+- `hill-climb` judges rank all the items instead of being told which two labels to compare, so the brief no longer points at the versions under development. The script reads the candidate-versus-incumbent preference from the ranking.
+- The judge brief asks for evidence on every score below 10 instead of below 9, so it no longer reveals the default target.
+- `--advisory` in both scripts applies to the latest assessment only; earlier decisions stand.
+- A newer retained version makes an earlier `blind-climb` final check obsolete instead of `INVALID`. The next one goes in `final-check-2/`.
+- `aggregate.py` regression and plateau warnings skip the rounds a judge did not run in, as the docs already said.
+- Round 0 reports `BASELINE` in `aggregate.py`, matching `tally.py`.
+
+### Fixed
+
+- `aggregate.py` no longer dead-ends when round 0 fails a required check: round 0 is the starting point, and a passing candidate can replace it.
+- `--advisory` no longer turns a run with several rounds into `INVALID`.
+- Corrected two details attributed to the video: the 52–78% is total tokens, and the first scores were Opus 6.0 and Sol 6.5.
+- Checked every claim attributed to the video against its transcript. The UI result shown is 9.5 or higher in every category from every judge, not 10/10, and two paraphrases are no longer in quotation marks.
+
+### Added
+
+- How to check that every member can see the items, including T3 Code native attachments and their limit of 8 per message.
+- `examples/landing-page/README.md`, which says the example is synthetic.
+
+### Removed
+
+- Rules duplicated between `CONTRIBUTING.md` and `AGENTS.md`, and exit codes repeated outside `run-format.md` and the script headers.
+- Decision rules repeated in both `run-format.md` files: they now define only the data, and the rules live once in `SKILL.md`. The paragraphs on staging files and checking delivery are shorter in both skills.
+
 ## [1.2.0] - 2026-11-06
 
 ### Added
@@ -18,7 +48,7 @@ All notable changes to this project are documented here. The format follows
 - Add pairwise blind candidate-vs-incumbent selection to `hill-climb` Climb rounds alongside rubric scoring.
 - Simplify the README install prompt to a single line and point agents to `AGENTS.md` at the bottom.
 
-## [1.1.0] - 2026-11-04
+## [1.1.0] - 2026-11-05
 
 ### Added
 

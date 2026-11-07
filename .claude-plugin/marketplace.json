@@ -4,14 +4,14 @@
     "name": "Axeeh"
   },
   "metadata": {
-    "description": "Score anything with a blind multi-provider jury and improve it until every judge gives it a 9/10, or improve it with blind reviewers and no scores at all.",
-    "version": "1.2.0"
+    "description": "Score anything with a blind multi-provider jury and improve it toward a 9/10 from every judge, or improve it with blind reviewers and no scores at all.",
+    "version": "2.0.0"
   },
   "plugins": [
     {
       "name": "hill-climb",
       "description": "The hill-climb and blind-climb skills plus the council skill they use as their panel (council from t3dotgg/tstack, MIT).",
-      "version": "1.2.0",
+      "version": "2.0.0",
       "source": "./",
       "strict": false,
       "author": {

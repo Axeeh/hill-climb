@@ -4,3 +4,4 @@ __pycache__/
 Thumbs.db
 # run logs created when you try the skill inside this repo
 hill-climb-runs/
+blind-climb-runs/

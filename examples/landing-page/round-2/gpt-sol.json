@@ -10,13 +10,16 @@
         "Distinctiveness": 8.8
       },
       "evidence": {
-        "Trust": "Example evidence: what keeps this below 9, and where.",
-        "Distinctiveness": "Example evidence: what keeps this below 9, and where."
+        "Offer clarity": "Synthetic example: what keeps this from a 10, and where.",
+        "Trust": "Synthetic example: what keeps this from a 10, and where.",
+        "Call to action": "Synthetic example: what keeps this from a 10, and where.",
+        "Friction": "Synthetic example: what keeps this from a 10, and where.",
+        "Distinctiveness": "Synthetic example: what keeps this from a 10, and where."
       },
       "top_fixes": [
-        "Example fix 1",
-        "Example fix 2",
-        "Example fix 3"
+        "Synthetic fix 1",
+        "Synthetic fix 2",
+        "Synthetic fix 3"
       ]
     },
     "B": {
@@ -28,16 +31,16 @@
         "Distinctiveness": 7.8
       },
       "evidence": {
-        "Offer clarity": "Example evidence: what keeps this below 9, and where.",
-        "Trust": "Example evidence: what keeps this below 9, and where.",
-        "Call to action": "Example evidence: what keeps this below 9, and where.",
-        "Friction": "Example evidence: what keeps this below 9, and where.",
-        "Distinctiveness": "Example evidence: what keeps this below 9, and where."
+        "Offer clarity": "Synthetic example: what keeps this from a 10, and where.",
+        "Trust": "Synthetic example: what keeps this from a 10, and where.",
+        "Call to action": "Synthetic example: what keeps this from a 10, and where.",
+        "Friction": "Synthetic example: what keeps this from a 10, and where.",
+        "Distinctiveness": "Synthetic example: what keeps this from a 10, and where."
       },
       "top_fixes": [
-        "Example fix 1",
-        "Example fix 2",
-        "Example fix 3"
+        "Synthetic fix 1",
+        "Synthetic fix 2",
+        "Synthetic fix 3"
       ]
     },
     "C": {
@@ -48,11 +51,17 @@
         "Friction": 9.2,
         "Distinctiveness": 9.0
       },
-      "evidence": {},
+      "evidence": {
+        "Offer clarity": "Synthetic example: what keeps this from a 10, and where.",
+        "Trust": "Synthetic example: what keeps this from a 10, and where.",
+        "Call to action": "Synthetic example: what keeps this from a 10, and where.",
+        "Friction": "Synthetic example: what keeps this from a 10, and where.",
+        "Distinctiveness": "Synthetic example: what keeps this from a 10, and where."
+      },
       "top_fixes": [
-        "Example fix 1",
-        "Example fix 2",
-        "Example fix 3"
+        "Synthetic fix 1",
+        "Synthetic fix 2",
+        "Synthetic fix 3"
       ]
     },
     "D": {
@@ -64,21 +73,34 @@
         "Distinctiveness": 6.2
       },
       "evidence": {
-        "Offer clarity": "Example evidence: what keeps this below 9, and where.",
-        "Trust": "Example evidence: what keeps this below 9, and where.",
-        "Call to action": "Example evidence: what keeps this below 9, and where.",
-        "Friction": "Example evidence: what keeps this below 9, and where.",
-        "Distinctiveness": "Example evidence: what keeps this below 9, and where."
+        "Offer clarity": "Synthetic example: what keeps this from a 10, and where.",
+        "Trust": "Synthetic example: what keeps this from a 10, and where.",
+        "Call to action": "Synthetic example: what keeps this from a 10, and where.",
+        "Friction": "Synthetic example: what keeps this from a 10, and where.",
+        "Distinctiveness": "Synthetic example: what keeps this from a 10, and where."
       },
       "top_fixes": [
-        "Example fix 1",
-        "Example fix 2",
-        "Example fix 3"
+        "Synthetic fix 1",
+        "Synthetic fix 2",
+        "Synthetic fix 3"
       ]
     }
   },
-  "comparison": {
-    "winner": "C",
+  "ranking": {
+    "order": [
+      [
+        "C"
+      ],
+      [
+        "A"
+      ],
+      [
+        "B"
+      ],
+      [
+        "D"
+      ]
+    ],
     "reason": "C outperforms D across every category and beats both external benchmarks."
   }
 }
